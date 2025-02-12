@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/shared/home/header";
+import { QueryProvider } from "@/lib/query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,17 +25,20 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={poppins.className}>
-        <NextTopLoader
-          color="#1968e6"
-          initialPosition={0.08}
-          crawlSpeed={200}
-          height={5}
-          easing="ease"
-          speed={200}
-          zIndex={1600}
-        />
-        <Header />
-        {children}
+        <QueryProvider>
+          <Toaster />
+          <NextTopLoader
+            color="#1968e6"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={5}
+            easing="ease"
+            speed={200}
+            zIndex={1600}
+          />
+          <Header />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
