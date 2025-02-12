@@ -1,5 +1,7 @@
 import NextTopLoader from "nextjs-toploader";
 import type { Metadata } from "next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/shared/home/header";
@@ -25,20 +27,22 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={poppins.className}>
-        <QueryProvider>
-          <Toaster />
-          <NextTopLoader
-            color="#1968e6"
-            initialPosition={0.08}
-            crawlSpeed={200}
-            height={5}
-            easing="ease"
-            speed={200}
-            zIndex={1600}
-          />
-          <Header />
-          {children}
-        </QueryProvider>
+        <NuqsAdapter>
+          <QueryProvider>
+            <Toaster />
+            <NextTopLoader
+              color="#1968e6"
+              initialPosition={0.08}
+              crawlSpeed={200}
+              height={5}
+              easing="ease"
+              speed={200}
+              zIndex={1600}
+            />
+            <Header />
+            {children}
+          </QueryProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );
