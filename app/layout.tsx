@@ -2,6 +2,7 @@ import NextTopLoader from "nextjs-toploader";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/shared/home/header";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,7 +24,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={poppins.className}>
         <NextTopLoader
-          color="#F40000"
+          color="#1968e6"
           initialPosition={0.08}
           crawlSpeed={200}
           height={5}
@@ -31,11 +32,8 @@ export default function RootLayout({
           speed={200}
           zIndex={1600}
         />
-        {/* <ClientCommons />
-        <SiteHeader /> */}
+        <Header />
         {children}
-        {/* <FooterNav />
-        <Footer /> */}
       </body>
     </html>
   );
