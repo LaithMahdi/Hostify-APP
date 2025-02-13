@@ -45,7 +45,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <div className="flex items-center ">
+      <div className="text-base">
         ID
         <button
           className="ml-2"
@@ -58,7 +58,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <div>
+      <div className="text-base">
         Equipement Name
         <button
           className="ml-2"
@@ -73,7 +73,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "icon",
     header: ({ column }) => (
-      <div className="flex">
+      <div className="text-base">
         Icon
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -87,7 +87,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "isActive",
     header: ({ column }) => (
-      <div>
+      <div className="text-base">
         Active
         <button
           className="ml-2"
@@ -104,7 +104,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <div>
+      <div className="text-base">
         Created At
         <button
           className="ml-2"
