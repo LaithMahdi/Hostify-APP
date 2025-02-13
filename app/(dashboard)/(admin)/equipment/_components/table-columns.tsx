@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Item } from "../page";
 import { formatDate } from "date-fns";
+import { Ban, CheckCircle2 } from "lucide-react";
+import ActionsButtons from "./actions-buttons";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -43,7 +45,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center ">
         ID
         <button
           className="ml-2"
@@ -51,11 +53,7 @@ export const columns: ColumnDef<Item>[] = [
         ></button>
       </div>
     ),
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3 justify-center">
-        <div>{row.original.id}</div>
-      </div>
-    ),
+    cell: ({ row }) => <p className="text-sm">{row.original.id}</p>,
   },
   {
     accessorKey: "name",
@@ -69,7 +67,7 @@ export const columns: ColumnDef<Item>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      return <div className="flex items-center gap-3">{row.original.name}</div>;
+      return <div className="text-sm">{row.original.name}</div>;
     },
   },
   {
@@ -98,10 +96,10 @@ export const columns: ColumnDef<Item>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      return (
-        <div className="flex items-center gap-3">
-          {row.original.isActive ? "Active" : "Inactive"}
-        </div>
+      return row.original.isActive ? (
+        <CheckCircle2 className="size-5 text-emerald-600" />
+      ) : (
+        <Ban className="size-5 text-red-600" />
       );
     },
   },
@@ -118,7 +116,7 @@ export const columns: ColumnDef<Item>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-3">
+        <div className="text-sm">
           {formatDate(new Date(row.original.createdAt), "dd-MM-yyyy HH:mm")}
         </div>
       );
@@ -128,7 +126,7 @@ export const columns: ColumnDef<Item>[] = [
     id: "actions",
     header: () => <div>Actions</div>,
     cell: ({ row }) => {
-      return <div className="flex items-center gap-3 bg-red-50"></div>;
+      return <ActionsButtons data={row.original} />;
     },
   },
 ];
