@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Item } from "../page";
 import { formatDate } from "date-fns";
-import { Ban, CheckCircle2 } from "lucide-react";
 import ActionsButtons from "./actions-buttons";
+import StatusButton from "./status-buttton";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -96,10 +96,8 @@ export const columns: ColumnDef<Item>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      return row.original.isActive ? (
-        <CheckCircle2 className="size-5 text-emerald-600" />
-      ) : (
-        <Ban className="size-5 text-red-600" />
+      return (
+        <StatusButton id={row.original.id} isActive={row.original.isActive} />
       );
     },
   },
