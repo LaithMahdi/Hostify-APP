@@ -20,20 +20,14 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Please enter a name.",
-  }),
-  icon: z.string().min(1, {
-    message: "Please upload an image.",
-  }),
-  description: z.string().optional(),
-  isActive: z.boolean().default(true),
-});
+import { useToast } from "@/hooks/use-toast";
+import { formSchema } from "./schema";
+import { useAddEquipment } from "./mutation/use-add-equipment";
 
 const FormCreate = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
+  const { toast } = useToast();
+  const addEquipment = useAddEquipment();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,9 +39,28 @@ const FormCreate = () => {
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    toast({
+      title: "Equipment created successfully",
+    });
+
+    try {
+      addEquipment.mutate(values);
+      toast({
+        title: "Succés",
+        description: "L'équipement a été créé avec succès",
+      });
+      form.reset();
+      setImageUrl("");
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Une erreur s'est produite",
+        variant: "destructive",
+      });
+    }
   }
 
   function handleUploadComplete(res: string) {
