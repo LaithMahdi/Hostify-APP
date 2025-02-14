@@ -41,22 +41,18 @@ const FormCreate = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    toast({
-      title: "Equipment created successfully",
-    });
-
     try {
       addEquipment.mutate(values);
       toast({
         title: "Succés",
-        description: "L'équipement a été créé avec succès",
+        description: "Equipment created successfully",
       });
       handleReset();
     } catch (error) {
       console.error(error);
       toast({
         title: "Error",
-        description: "Une erreur s'est produite",
+        description: "An error occurred",
         variant: "destructive",
       });
     }

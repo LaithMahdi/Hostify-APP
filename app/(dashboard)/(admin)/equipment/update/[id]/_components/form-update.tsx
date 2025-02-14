@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,41 +21,42 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { formSchema } from "./schema";
-import { useAddEquipment } from "./mutation/use-add-equipment";
+import { useUpdateEquipment } from "./mutation/use-update-equipment";
+import { Item } from "../../../page";
 
-const FormCreate = () => {
-  const [imageUrl, setImageUrl] = useState<string>("");
+interface Props {
+  item: Item;
+}
+
+const FormUpdate = ({ item }: Props) => {
+  const [imageUrl, setImageUrl] = useState<string>(item.icon ? item.icon : "");
   const { toast } = useToast();
-  const addEquipment = useAddEquipment();
+  const updateEquipment = useUpdateEquipment({ id: item.id });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      icon: "",
-      isActive: true,
+      name: item.name ?? "",
+      description: item.description ?? "",
+      icon: item.icon ?? "",
+      isActive: item?.isActive ?? true,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    toast({
-      title: "Equipment created successfully",
-    });
 
     try {
-      addEquipment.mutate(values);
+      updateEquipment.mutate(values);
       toast({
-        title: "Succés",
-        description: "L'équipement a été créé avec succès",
+        title: "Success",
+        description: "Equipment updated successfully",
       });
-      handleReset();
     } catch (error) {
       console.error(error);
       toast({
         title: "Error",
-        description: "Une erreur s'est produite",
+        description: "An error occurred",
         variant: "destructive",
       });
     }
@@ -191,4 +191,4 @@ const FormCreate = () => {
   );
 };
 
-export default FormCreate;
+export default FormUpdate;

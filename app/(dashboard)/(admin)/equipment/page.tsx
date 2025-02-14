@@ -106,6 +106,7 @@ export type Item = {
   id: number;
   name: string;
   icon: string;
+  description: string;
   isActive: boolean;
   createdAt: string;
 };
