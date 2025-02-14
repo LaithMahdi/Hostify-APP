@@ -41,7 +41,7 @@ export default function Page() {
   const hasPreviousPage = data?.data.pageInfo?.hasPreviousPage ?? false;
 
   return (
-    <section className="flex flex-col items-start justify-start gap-2 w-full">
+    <section className="flex flex-col items-start justify-start gap-2 w-full p-2">
       <BreadCrumbList
         breadCrumbs={[
           { label: "Dashboard", href: "/" },
