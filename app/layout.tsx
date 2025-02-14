@@ -6,7 +6,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/shared/home/header";
 import { QueryProvider } from "@/lib/query-provider";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 
 const poppins = Poppins({
   subsets: ["latin"],
