@@ -51,8 +51,7 @@ const FormCreate = () => {
         title: "Succés",
         description: "L'équipement a été créé avec succès",
       });
-      form.reset();
-      setImageUrl("");
+      handleReset();
     } catch (error) {
       console.error(error);
       toast({
@@ -66,6 +65,11 @@ const FormCreate = () => {
   function handleUploadComplete(res: string) {
     setImageUrl(res);
     form.setValue("icon", res);
+  }
+
+  function handleReset() {
+    form.reset();
+    setImageUrl("");
   }
 
   return (
@@ -175,7 +179,7 @@ const FormCreate = () => {
         </div>
 
         <div className="flex flex-row gap-2">
-          <Button type="reset" variant="outline">
+          <Button type="reset" variant="outline" onClick={handleReset}>
             Reset
           </Button>
           <Button type="submit" variant="primary">
