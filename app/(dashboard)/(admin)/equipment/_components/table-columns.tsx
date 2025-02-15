@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Item } from "../page";
 import { formatDate } from "date-fns";
+import ActionsButtons from "./actions-buttons";
+import StatusButton from "./status-buttton";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -43,7 +45,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <div className="flex items-center justify-center">
+      <div className="text-base">
         ID
         <button
           className="ml-2"
@@ -51,16 +53,12 @@ export const columns: ColumnDef<Item>[] = [
         ></button>
       </div>
     ),
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3 justify-center">
-        <div>{row.original.id}</div>
-      </div>
-    ),
+    cell: ({ row }) => <p className="text-sm">{row.original.id}</p>,
   },
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <div>
+      <div className="text-base">
         Equipement Name
         <button
           className="ml-2"
@@ -69,13 +67,13 @@ export const columns: ColumnDef<Item>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      return <div className="flex items-center gap-3">{row.original.name}</div>;
+      return <div className="text-sm">{row.original.name}</div>;
     },
   },
   {
     accessorKey: "icon",
     header: ({ column }) => (
-      <div className="flex">
+      <div className="text-base">
         Icon
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -89,7 +87,7 @@ export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "isActive",
     header: ({ column }) => (
-      <div>
+      <div className="text-base">
         Active
         <button
           className="ml-2"
@@ -99,16 +97,14 @@ export const columns: ColumnDef<Item>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-3">
-          {row.original.isActive ? "Active" : "Inactive"}
-        </div>
+        <StatusButton id={row.original.id} isActive={row.original.isActive} />
       );
     },
   },
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <div>
+      <div className="text-base">
         Created At
         <button
           className="ml-2"
@@ -118,7 +114,7 @@ export const columns: ColumnDef<Item>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-3">
+        <div className="text-sm">
           {formatDate(new Date(row.original.createdAt), "dd-MM-yyyy HH:mm")}
         </div>
       );
@@ -128,7 +124,7 @@ export const columns: ColumnDef<Item>[] = [
     id: "actions",
     header: () => <div>Actions</div>,
     cell: ({ row }) => {
-      return <div className="flex items-center gap-3 bg-red-50"></div>;
+      return <ActionsButtons data={row.original} />;
     },
   },
 ];
