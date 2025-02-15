@@ -3,6 +3,7 @@ import { PencilIcon, TrashIcon } from "lucide-react";
 import { Item } from "../page";
 import { useState } from "react";
 import DeleteButton from "./delete-button";
+import { useRouter } from "next/navigation";
 
 interface Props {
   data: Item;
@@ -10,10 +11,16 @@ interface Props {
 
 const ActionsButtons = ({ data }: Props) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const router = useRouter();
 
   return (
     <div className="flex items-center gap-1">
-      <Button variant="outline" size="sm" className="!p-2">
+      <Button
+        variant="outline"
+        size="sm"
+        className="!p-2"
+        onClick={() => router.push(`/equipment/update/${data.id}`)}
+      >
         <PencilIcon />
       </Button>
       <Button

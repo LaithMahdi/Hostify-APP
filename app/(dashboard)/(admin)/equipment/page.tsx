@@ -1,19 +1,20 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { parseAsInteger, useQueryState as useSearchParamsState } from "nuqs";
-import { useState } from "react";
 import apiClient from "@/lib/api-client";
 import Items from "./_components/items";
 import Search from "./_components/search";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import FilterButton from "../../../../components/shared/filter-button";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import BreadCrumbList from "@/components/shared/bread-crumb-list";
 
 const ITEMS_PER_PAGE = 10;
 
 export default function Page() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [page, setPage] = useSearchParamsState(
     "page",
     parseAsInteger.withDefault(1)
@@ -34,14 +35,19 @@ export default function Page() {
     { id: "true", label: "Active" },
     { id: "false", label: "Inactive" },
   ];
-  const [open, setOpen] = useState<boolean>(false);
 
   const totalItems = data?.data.totalItems ? data.data.totalItems : 0;
   const hasNextPage = data?.data.pageInfo?.hasNextPage ?? false;
   const hasPreviousPage = data?.data.pageInfo?.hasPreviousPage ?? false;
 
   return (
-    <section className="flex flex-col items-start justify-start gap-2 w-full">
+    <section className="flex flex-col items-start justify-start gap-2 w-full p-2">
+      <BreadCrumbList
+        breadCrumbs={[
+          { label: "Dashboard", href: "/" },
+          { label: "Equipment", href: "/equipment" },
+        ]}
+      />
       <h1 className="text-3xl font-semibold mb-3">
         Equipment&nbsp;
         <span className="text-sm font-medium text-gray-500">
@@ -52,7 +58,11 @@ export default function Page() {
         <Search />
         <FilterButton filterName="isActive" options={options} />
         <div className="flex flex-1 justify-end">
-          <Button variant="primary" className="py-5">
+          <Button
+            variant="primary"
+            className="py-5"
+            onClick={() => router.push("/equipment/create")}
+          >
             <Plus className="text-white" />
             Create
           </Button>
@@ -96,6 +106,7 @@ export type Item = {
   id: number;
   name: string;
   icon: string;
+  description: string;
   isActive: boolean;
   createdAt: string;
 };

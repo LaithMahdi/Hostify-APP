@@ -11,7 +11,7 @@ import {
 import { Item } from "../page";
 import apiClient from "@/lib/api-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 interface Props {
   data: Item;
@@ -21,6 +21,7 @@ interface Props {
 
 const DeleteButton = ({ data, open, onOpenChange }: Props) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => {
@@ -28,16 +29,24 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
     },
     onSuccess: (data) => {
       if (data.data.success) {
-        toast.success("Equipment deleted successfully");
+        toast({
+          title: "Equipment deleted successfully",
+        });
         queryClient.invalidateQueries({ queryKey: ["equipments"] });
         onOpenChange(false);
       } else {
-        toast.error("Failed to delete equipment");
+        toast({
+          title: "Failed to delete equipment",
+          variant: "destructive",
+        });
         onOpenChange(false);
       }
     },
     onError: (error) => {
-      toast.error("Failed to delete equipment");
+      toast({
+        title: "Failed to delete equipment",
+        variant: "destructive",
+      });
       console.error("Failed", error);
     },
   });

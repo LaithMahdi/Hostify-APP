@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { Ban, Check, CheckCircle2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import apiClient from "@/lib/api-client";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 interface Props {
   id: number;
@@ -33,6 +33,7 @@ export default function StatusButton({ isActive, id }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<boolean>(isActive);
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { mutate, isPending } = useMutation({
     mutationFn: ({ isActive }: { isActive: boolean }) => {
@@ -40,16 +41,24 @@ export default function StatusButton({ isActive, id }: Props) {
     },
     onSuccess: (data) => {
       if (data.data.success) {
-        toast.success("Equipment updated successfully");
+        toast({
+          title: "Equipment updated successfully",
+        });
         queryClient.invalidateQueries({ queryKey: ["equipments", id] });
         setOpen(false);
       } else {
-        toast.error("Failed to update equipment");
+        toast({
+          title: "Failed to update equipment",
+          variant: "destructive",
+        });
         setOpen(false);
       }
     },
     onError: (error) => {
-      toast.error("Failed to update equipment");
+      toast({
+        title: "Failed to update equipment",
+        variant: "destructive",
+      });
       console.error("Failed", error);
     },
   });
