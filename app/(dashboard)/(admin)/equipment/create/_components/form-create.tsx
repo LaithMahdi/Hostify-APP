@@ -57,7 +57,7 @@ const FormCreate = () => {
       toast({
         title: "Error",
         description: "An error occurred",
-        variant: "destructive",
+        variant: "success",
       });
       setLoading(true);
     }
