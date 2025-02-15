@@ -65,9 +65,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading && (
           <span className="min-w-[50px]  flex items-center justify-center">
-            {children}
+            <Loader2 className="animate-spin duration-500 w-7 stroke-[2.5] h-7" />{" "}
             <div className="ml-2" />
-            <Loader2 className="animate-spin duration-500 w-7 stroke-[2.5] h-7" />
+            {children}
           </span>
         )}
         {!loading && children}

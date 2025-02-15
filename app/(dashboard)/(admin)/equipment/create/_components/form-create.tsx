@@ -21,9 +21,13 @@ import { useToast } from "@/hooks/use-toast";
 import { formSchema } from "./schema";
 import { useAddEquipment } from "./mutation/use-add-equipment";
 import ImageUploader from "@/components/shared/image-uploader";
+import { useRouter } from "next/navigation";
 
 const FormCreate = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
   const { toast } = useToast();
   const addEquipment = useAddEquipment();
 
@@ -38,7 +42,7 @@ const FormCreate = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    setLoading(true);
     try {
       addEquipment.mutate(values);
       toast({
@@ -46,6 +50,8 @@ const FormCreate = () => {
         description: "Equipment created successfully",
       });
       handleReset();
+      setLoading(false);
+      router.push("/equipment");
     } catch (error) {
       console.error(error);
       toast({
@@ -53,6 +59,7 @@ const FormCreate = () => {
         description: "An error occurred",
         variant: "destructive",
       });
+      setLoading(true);
     }
   }
 
@@ -132,10 +139,15 @@ const FormCreate = () => {
         />
 
         <div className="flex flex-row gap-2">
-          <Button type="reset" variant="outline" onClick={handleReset}>
+          <Button
+            type="reset"
+            variant="outline"
+            onClick={handleReset}
+            loading={loading}
+          >
             Reset
           </Button>
-          <Button type="submit" variant="primary">
+          <Button type="submit" variant="primary" loading={loading}>
             Submit
           </Button>
         </div>
