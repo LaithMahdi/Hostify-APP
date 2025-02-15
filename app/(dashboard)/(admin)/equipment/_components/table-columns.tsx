@@ -6,6 +6,7 @@ import { Item } from "../page";
 import { formatDate } from "date-fns";
 import ActionsButtons from "./actions-buttons";
 import StatusButton from "./status-buttton";
+import DescriptionTooltip from "@/components/shared/description-tooltip";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -70,6 +71,28 @@ export const columns: ColumnDef<Item>[] = [
       return <div className="text-sm">{row.original.name}</div>;
     },
   },
+
+  {
+    accessorKey: "description",
+    header: ({ column }) => (
+      <div className="text-base">
+        Description
+        <button
+          className="ml-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        ></button>
+      </div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <DescriptionTooltip
+          title="Description"
+          description={row.original.description}
+        />
+      );
+    },
+  },
+
   {
     accessorKey: "icon",
     header: ({ column }) => (
