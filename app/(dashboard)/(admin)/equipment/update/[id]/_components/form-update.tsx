@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,15 +13,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UploadDropzone } from "@/utils/uploadthing";
 import { useState } from "react";
-import { X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { formSchema } from "./schema";
 import { useUpdateEquipment } from "./mutation/use-update-equipment";
 import { Item } from "../../../page";
+import ImageUploader from "@/components/shared/image-uploader";
+import { formSchema } from "../../../create/_components/schema";
 
 interface Props {
   item: Item;
@@ -60,11 +58,6 @@ const FormUpdate = ({ item }: Props) => {
         variant: "destructive",
       });
     }
-  }
-
-  function handleUploadComplete(res: string) {
-    setImageUrl(res);
-    form.setValue("icon", res);
   }
 
   function handleReset() {
@@ -133,50 +126,15 @@ const FormUpdate = ({ item }: Props) => {
             )}
           />
         </div>
-        <div>
-          {imageUrl == "" ? (
-            <div>
-              <UploadDropzone
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  handleUploadComplete(res[0].ufsUrl);
-                  form.clearErrors("icon");
-                }}
-                config={{
-                  mode: "auto",
-                }}
-                onUploadError={(error: Error) => {
-                  console.log(`ERROR! ${error.message}`);
-                }}
-              />
-              <p className="text-red-500 text-sm mt-2">
-                {form.formState.errors.icon?.message}
-              </p>
-            </div>
-          ) : (
-            <div className="relative">
-              <img
-                src={imageUrl}
-                loading="lazy"
-                alt="icon"
-                className="w-full h-[18rem] rounded-lg object-cover"
-              />
-              <div className="absolute -top-4 -right-4">
-                <Button
-                  size="icon"
-                  variant="destructive"
-                  className="rounded-full"
-                  onClick={() => {
-                    setImageUrl("");
-                    form.setValue("icon", "");
-                  }}
-                >
-                  <X />
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
+
+        <ImageUploader
+          imageUrl={imageUrl}
+          onChange={(url) => {
+            setImageUrl(url);
+            form.setValue("icon", url);
+          }}
+          errorMessage={form.formState.errors.icon?.message}
+        />
 
         <div className="flex flex-row gap-2">
           <Button type="reset" variant="outline" onClick={handleReset}>

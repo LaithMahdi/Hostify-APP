@@ -75,7 +75,7 @@ export default function StatusButton({ isActive, id }: Props) {
           <Button
             size="icon"
             className={cn(
-              "shadow-none",
+              "shadow-none w-10 h-11",
               selectedValue
                 ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
                 : "bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"

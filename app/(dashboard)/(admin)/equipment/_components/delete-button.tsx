@@ -37,7 +37,7 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
       } else {
         toast({
           title: "Failed to delete equipment",
-          variant: "destructive",
+          variant: "success",
         });
         onOpenChange(false);
       }
@@ -45,7 +45,7 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
     onError: (error) => {
       toast({
         title: "Failed to delete equipment",
-        variant: "destructive",
+        variant: "error",
       });
       console.error("Failed", error);
     },
@@ -62,9 +62,11 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending} className="py-2 px-4">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
-            className="bg-red-600 hover:bg-red-600/90"
+            className="bg-red-600 hover:bg-red-600/90 py-2 px-4"
             disabled={isPending}
             onClick={() => mutate()}
           >
