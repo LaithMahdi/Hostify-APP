@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,17 +14,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UploadDropzone } from "@/utils/uploadthing";
 import { useState } from "react";
-import { X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { formSchema } from "./schema";
 import { useAddEquipment } from "./mutation/use-add-equipment";
+import ImageUploader from "@/components/shared/image-uploader";
+import { useRouter } from "next/navigation";
 
 const FormCreate = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
   const { toast } = useToast();
   const addEquipment = useAddEquipment();
 
@@ -40,7 +42,7 @@ const FormCreate = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    setLoading(true);
     try {
       addEquipment.mutate(values);
       toast({
@@ -48,19 +50,17 @@ const FormCreate = () => {
         description: "Equipment created successfully",
       });
       handleReset();
+      setLoading(false);
+      router.push("/equipment");
     } catch (error) {
       console.error(error);
       toast({
         title: "Error",
         description: "An error occurred",
-        variant: "destructive",
+        variant: "success",
       });
+      setLoading(true);
     }
-  }
-
-  function handleUploadComplete(res: string) {
-    setImageUrl(res);
-    form.setValue("icon", res);
   }
 
   function handleReset() {
@@ -129,56 +129,25 @@ const FormCreate = () => {
             )}
           />
         </div>
-        <div>
-          {imageUrl == "" ? (
-            <div>
-              <UploadDropzone
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  handleUploadComplete(res[0].ufsUrl);
-                  form.clearErrors("icon");
-                }}
-                config={{
-                  mode: "auto",
-                }}
-                onUploadError={(error: Error) => {
-                  console.log(`ERROR! ${error.message}`);
-                }}
-              />
-              <p className="text-red-500 text-sm mt-2">
-                {form.formState.errors.icon?.message}
-              </p>
-            </div>
-          ) : (
-            <div className="relative">
-              <img
-                src={imageUrl}
-                loading="lazy"
-                alt="icon"
-                className="w-full h-[18rem] rounded-lg object-cover"
-              />
-              <div className="absolute -top-4 -right-4">
-                <Button
-                  size="icon"
-                  variant="destructive"
-                  className="rounded-full"
-                  onClick={() => {
-                    setImageUrl("");
-                    form.setValue("icon", "");
-                  }}
-                >
-                  <X />
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
+        <ImageUploader
+          imageUrl={imageUrl}
+          onChange={(url) => {
+            setImageUrl(url);
+            form.setValue("icon", url);
+          }}
+          errorMessage={form.formState.errors.icon?.message}
+        />
 
         <div className="flex flex-row gap-2">
-          <Button type="reset" variant="outline" onClick={handleReset}>
+          <Button
+            type="reset"
+            variant="outline"
+            onClick={handleReset}
+            loading={loading}
+          >
             Reset
           </Button>
-          <Button type="submit" variant="primary">
+          <Button type="submit" variant="primary" loading={loading}>
             Submit
           </Button>
         </div>

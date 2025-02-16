@@ -33,8 +33,6 @@ export default function FilterButton({ title, options, filterName }: Props) {
 
   const handleFilterChange = (filter: Option) => {
     setSelectedFilter(filter.id);
-    setPage("1");
-    setSelected(filter.id);
   };
 
   const handleClearFilter = () => {
@@ -83,7 +81,7 @@ export default function FilterButton({ title, options, filterName }: Props) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-7 px-2"
+                  className="!h-7 !px-2 text-xs"
                   onClick={handleClearFilter}
                   type="button"
                 >
@@ -91,7 +89,7 @@ export default function FilterButton({ title, options, filterName }: Props) {
                 </Button>
                 <Button
                   size="sm"
-                  className="h-7 px-2 bg-mainColor hover:bg-mainColor/90"
+                  className="!h-7 !px-2 text-xs bg-mainColor hover:bg-mainColor/90"
                 >
                   Apply
                 </Button>
