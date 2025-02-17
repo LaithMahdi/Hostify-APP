@@ -4,7 +4,6 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/shared/home/header";
 import { QueryProvider } from "@/lib/query-provider";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -39,7 +38,6 @@ export default function RootLayout({
               speed={200}
               zIndex={1600}
             />
-            <Header />
             {children}
           </QueryProvider>
         </NuqsAdapter>
