@@ -113,7 +113,7 @@ const SignInPage = () => {
             </Link>
 
             <Button
-              disabled={isPending}
+              loading={isPending}
               size="lg"
               className="w-full"
               variant="primary"
