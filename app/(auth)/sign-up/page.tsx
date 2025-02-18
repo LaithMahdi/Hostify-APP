@@ -22,6 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { roles } from "../constants";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { role } from "../types";
 
 const SignUpPage = () => {
   const router = useRouter();
@@ -34,23 +35,31 @@ const SignUpPage = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      role: role.USER,
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: z.infer<typeof signUpSchema>) => {
-      return apiClient.post(`/auth/register`, values);
+      return apiClient.post(`/auth/register`, {
+        fullName: values.fullName,
+        email: values.email,
+        password: values.password,
+        role: values.role,
+      });
     },
     onSuccess: () => {
       toast({
         title: "Success",
         description: "Congratulations! You have successfully signed up",
+        variant: "success",
       });
     },
     onError: (error) => {
       toast({
         title: "Error",
         description: "Sign up failed please try again",
+        variant: "error",
       });
       console.error("Sign up failed", error);
     },
@@ -78,13 +87,13 @@ const SignUpPage = () => {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <div className="flex flex-row space-x-2">
+                    <div className="flex flex-row px-3 py-2 bg-gray-100 rounded-md">
                       {roles.map((role) => (
                         <div
                           key={role.value}
                           onClick={() => field.onChange(role.value)}
                           className={cn(
-                            "w-full bg-gray-200 p-2 rounded-md text-center text-sm font-medium",
+                            "w-full bg-transparent p-2 rounded-md text-center text-sm font-medium cursor-pointer transition-colors hover:font-semibold hover:bg-mainColor/20",
                             field.value === role.value &&
                               "bg-mainColor text-white"
                           )}

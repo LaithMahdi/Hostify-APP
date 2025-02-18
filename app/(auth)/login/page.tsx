@@ -20,6 +20,8 @@ import { signInSchema } from "../schema";
 import apiClient from "@/lib/api-client";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { setCookie } from "@/lib/cookies";
+import { COOKIE_KEY } from "@/lib/keys";
 
 const SignInPage = () => {
   const router = useRouter();
@@ -37,12 +39,20 @@ const SignInPage = () => {
     mutationFn: (values: z.infer<typeof signInSchema>) => {
       return apiClient.post(`auth/login`, values);
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       toast({
         title: "Success",
         description: "Login successful",
       });
+
+      setCookie(COOKIE_KEY, data.token, {
+        expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000),
+        path: "/",
+        secure: true,
+        sameSite: "strict",
+      });
       router.push("/");
+      // window.location.href = "/";
     },
     onError: (error) => {
       toast({
