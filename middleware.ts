@@ -54,27 +54,15 @@ export async function middleware(request: NextRequest) {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
-    pathname.startsWith("/static")
+    pathname.startsWith("/static") ||
+    pathname === "/login" ||
+    pathname === "/sign-up"
   ) {
     return NextResponse.next();
   }
 
   // Get the token from the cookie using NextRequest
   const token = request.cookies.get(COOKIE_KEY)?.value;
-
-  // ✅ Prevent logged-in users from accessing /login and /sign-up
-  if (token) {
-    const payload = await verifyToken(token);
-
-    // If the token is valid and not expired
-    if (payload && !isTokenExpired(payload.exp)) {
-      // Redirect logged-in users away from /login and /sign-up
-      if (pathname === "/login" || pathname === "/sign-up") {
-        console.log("🔒 User already logged in, redirecting to dashboard.");
-        return NextResponse.redirect(new URL("/", request.url));
-      }
-    }
-  }
 
   // If accessing a protected route
   if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
@@ -114,6 +102,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({
       headers: requestHeaders,
     });
+  }
+
+  // ✅ Prevent logged-in users from accessing /login and /sign-up
+  if (token) {
+    const payload = await verifyToken(token);
+    if (payload && !isTokenExpired(payload.exp)) {
+      if (pathname === "/login" || pathname === "/sign-up") {
+        console.log("🔒 User already logged in, redirecting to dashboard.");
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    }
   }
 
   return NextResponse.next();

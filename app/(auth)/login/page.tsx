@@ -21,7 +21,6 @@ import apiClient from "@/lib/api-client";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { setCookie } from "@/lib/cookies";
-import { COOKIE_KEY } from "@/lib/keys";
 
 const SignInPage = () => {
   const router = useRouter();
@@ -43,16 +42,16 @@ const SignInPage = () => {
       toast({
         title: "Success",
         description: "Login successful",
+        variant: "success",
       });
 
-      setCookie(COOKIE_KEY, data.token, {
+      setCookie("hostify-cookie-session", data.token, {
         expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000),
         path: "/",
         secure: true,
         sameSite: "strict",
       });
       router.push("/");
-      // window.location.href = "/";
     },
     onError: (error) => {
       toast({
