@@ -49,7 +49,7 @@ export default function StatusButton({ isActive, id }: Props) {
       } else {
         toast({
           title: "Failed to update equipment",
-          variant: "destructive",
+          variant: "success",
         });
         setOpen(false);
       }
@@ -57,7 +57,7 @@ export default function StatusButton({ isActive, id }: Props) {
     onError: (error) => {
       toast({
         title: "Failed to update equipment",
-        variant: "destructive",
+        variant: "error",
       });
       console.error("Failed", error);
     },

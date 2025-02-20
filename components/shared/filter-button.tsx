@@ -33,6 +33,8 @@ export default function FilterButton({ title, options, filterName }: Props) {
 
   const handleFilterChange = (filter: Option) => {
     setSelectedFilter(filter.id);
+    setPage("1");
+    setSelected(filter.id);
   };
 
   const handleClearFilter = () => {
