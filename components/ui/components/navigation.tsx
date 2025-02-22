@@ -7,21 +7,25 @@ const routes = [
     icon: Layout,
     label: "Dashboard",
     href: "/",
+    items: [],
   },
   {
     icon: School,
     label: "Guest Houses",
     href: "/guest-houses",
+    items: [],
   },
   {
     icon: DoorClosed,
     label: "Rooms",
     href: "/rooms",
+    items: [],
   },
   {
     icon: Sofa,
     label: "Equipment",
     href: "/equipment",
+    items: [],
   },
 ];
 
