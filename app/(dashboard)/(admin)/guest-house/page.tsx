@@ -7,6 +7,8 @@ import FilterButton from "../../../../components/shared/filter-button";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
+import Items from "./_components/items";
+import Search from "./_components/search";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -22,10 +24,10 @@ export default function Page() {
   const isActive = searchParams.get("isActive") || "";
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: ["equipments", page, search, isActive],
+    queryKey: ["guest-houses", page, search, isActive],
     queryFn: () =>
       apiClient.get(
-        `/equipment/all?page=${page}&search=${search}&isActive=${isActive}`
+        `/guest-house/all?page=${page}&search=${search}&isActive=${isActive}`
       ),
   });
 
@@ -43,23 +45,23 @@ export default function Page() {
       <BreadCrumbList
         breadCrumbs={[
           { label: "Dashboard", href: "/" },
-          { label: "Equipment", href: "/equipment" },
+          { label: "Guest House", href: "/guest-house" },
         ]}
       />
       <h1 className="text-3xl font-semibold mb-3">
-        Equipment&nbsp;
+        Guest Houses&nbsp;
         <span className="text-sm font-medium text-gray-500">
           ({totalItems})
         </span>
       </h1>
       <div className="flex items-center flex-col md:flex-row gap-2 w-full">
-        {/* <Search /> */}
+        <Search />
         <FilterButton filterName="isActive" options={options} />
         <div className="flex flex-1 justify-end">
           <Button
             variant="primary"
             className="py-5"
-            onClick={() => router.push("/room/create")}
+            onClick={() => router.push("/guest-house/create")}
           >
             <Plus className="text-white" />
             Create
@@ -67,7 +69,7 @@ export default function Page() {
         </div>
       </div>
       <div className="flex items-center justify-between gap-2 w-full">
-        {/* <Items
+        <Items
           isLoading={isFetching}
           paginationProps={{
             advanced: {
@@ -83,7 +85,7 @@ export default function Page() {
           }}
           items={data?.data.data || []}
           viewMode={"list"}
-        /> */}
+        />
       </div>
     </section>
   );
@@ -103,8 +105,18 @@ export type DataType = {
 export type Item = {
   id: number;
   name: string;
-  icon: string;
+  address: string;
+  region: string;
   description: string;
-  isActive: boolean;
+  rating: number;
+  hasParking: boolean;
+  isPetFriendly: boolean;
+  rooms: Array<{
+    id: number;
+  }>;
+  images: Array<{
+    id: number;
+    url: string;
+  }>;
   createdAt: string;
 };
