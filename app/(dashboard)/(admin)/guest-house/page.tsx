@@ -3,12 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { parseAsInteger, useQueryState as useSearchParamsState } from "nuqs";
 import apiClient from "@/lib/api-client";
 import { useRouter, useSearchParams } from "next/navigation";
-import FilterButton from "../../../../components/shared/filter-button";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
 import Items from "./_components/items";
 import Search from "./_components/search";
+import { RegionFilter } from "./_components/region-filter";
+import { governorates } from "./_components/constants";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -22,19 +23,15 @@ export default function Page() {
 
   const search = searchParams.get("search") || "";
   const isActive = searchParams.get("isActive") || "";
+  const country = searchParams.get("country") || "";
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: ["guest-houses", page, search, isActive],
+    queryKey: ["guest-houses", page, search, isActive, country],
     queryFn: () =>
       apiClient.get(
-        `/guest-house/all?page=${page}&search=${search}&isActive=${isActive}`
+        `/guest-house/all?page=${page}&search=${search}&country=${country}`
       ),
   });
-
-  const options = [
-    { id: "true", label: "Active" },
-    { id: "false", label: "Inactive" },
-  ];
 
   const totalItems = data?.data.totalItems ? data.data.totalItems : 0;
   const hasNextPage = data?.data.pageInfo?.hasNextPage ?? false;
@@ -56,7 +53,13 @@ export default function Page() {
       </h1>
       <div className="flex items-center flex-col md:flex-row gap-2 w-full">
         <Search />
-        <FilterButton filterName="isActive" options={options} />
+        <RegionFilter
+          filterName="country"
+          options={governorates.map((e) => {
+            return { value: e, label: e };
+          })}
+        />
+        {/* <FilterButton filterName="isActive" options={governorates} /> */}
         <div className="flex flex-1 justify-end">
           <Button
             variant="primary"
