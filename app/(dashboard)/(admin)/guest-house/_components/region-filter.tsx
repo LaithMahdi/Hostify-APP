@@ -1,5 +1,5 @@
 "use client";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { parseAsString, useQueryState } from "nuqs";
+import { useUpdateSearchParams } from "@/hooks/use-set-search-param";
+// import { useUpdateSearchParams } from "@/hooks/use-update-search-param"; // Adjust the import path
 
 interface Option {
   value: string;
@@ -38,53 +40,78 @@ export function RegionFilter({ filterName, title, options }: Props) {
 
   const [page, setPage] = useQueryState("page", parseAsString);
   const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(selected);
+
+  const { deleteSearchParam } = useUpdateSearchParams();
+
+  const handleSelect = (currentValue: string) => {
+    if (currentValue === value) {
+      setValue("");
+      setSelected("");
+      deleteSearchParam(filterName);
+    } else {
+      setValue(currentValue);
+      setSelected(currentValue);
+    }
+    setPage("1");
+    setOpen(false);
+  };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+    <>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-[200px] justify-between !h-[38px]"
+          >
+            {value
+              ? options.find((option) => option.value === value)?.label
+              : "Select..."}
+            <ChevronsUpDown className="ml-2 size-3 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput placeholder="Search region..." />
+            <CommandList>
+              <CommandEmpty>No results found</CommandEmpty>
+              <CommandGroup>
+                {options.map((option) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.value}
+                    onSelect={handleSelect} // Use the new handleSelect function
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 size-3",
+                        value === option.value ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {option.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      {value !== "Select..." && (
         <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between !h-[38px]"
+          onClick={() => {
+            setValue("");
+            setSelected("");
+            deleteSearchParam(filterName);
+          }}
+          variant="destructive"
+          className="!size-8 rounded-full"
         >
-          {value
-            ? options.find((option) => option.value === value)?.label
-            : "Select..."}
-          <ChevronsUpDown className="ml-2 size-3 shrink-0 opacity-50" />
+          <X />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandList>
-            <CommandEmpty>No results found</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setSelected(currentValue === value ? "" : currentValue);
-                    setPage("1");
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 size-3",
-                      value === option.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+      )}
+    </>
   );
 }

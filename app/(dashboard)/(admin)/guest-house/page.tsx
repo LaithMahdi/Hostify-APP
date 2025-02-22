@@ -58,7 +58,7 @@ export default function Page() {
           options={governorates.map((e) => {
             return { value: e, label: e };
           })}
-        />
+        />{" "}
         {/* <FilterButton filterName="isActive" options={governorates} /> */}
         <div className="flex flex-1 justify-end">
           <Button
