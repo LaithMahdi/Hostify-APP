@@ -12,14 +12,12 @@ const routes = [
   {
     icon: School,
     label: "Guest Houses",
-    href: "/guest-houses",
-    items: [],
+    href: "/guest-house",
   },
   {
     icon: DoorClosed,
     label: "Rooms",
-    href: "/rooms",
-    items: [],
+    href: "/room",
   },
   {
     icon: Sofa,
