@@ -11,17 +11,18 @@ const routes = [
   {
     icon: School,
     label: "Guest Houses",
-    href: "/guest-houses",
+    href: "/guest-house",
   },
   {
     icon: DoorClosed,
     label: "Rooms",
-    href: "/rooms",
+    href: "/room",
   },
   {
     icon: Sofa,
     label: "Equipment",
     href: "/equipment",
+    items: [],
   },
 ];
 
