@@ -6,7 +6,7 @@ const routes = [
   {
     icon: Layout,
     label: "Dashboard",
-    href: "/",
+    href: "/dashboard",
   },
   {
     icon: School,

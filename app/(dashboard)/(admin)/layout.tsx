@@ -14,6 +14,7 @@ const DashboardLayout = ({ children }: Props) => {
         <Sidebar />
       </div>
       <main className="md:pl-72 md:pr-12 pt-[60px] h-full">{children}</main>
+    
     </div>
   );
 };
