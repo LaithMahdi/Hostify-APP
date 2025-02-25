@@ -10,6 +10,7 @@ import Items from "./_components/items";
 import Search from "./_components/search";
 import { RegionFilter } from "./_components/region-filter";
 import { governorates } from "./_components/constants";
+import FilterButton from "@/components/shared/filter-button";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -22,14 +23,22 @@ export default function Page() {
   );
 
   const search = searchParams.get("search") || "";
-  const isActive = searchParams.get("isActive") || "";
+  const hasParking = searchParams.get("hasParking");
+  const isPetFriendly = searchParams.get("isPetFriendly");
   const country = searchParams.get("country") || "";
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: ["guest-houses", page, search, isActive, country],
+    queryKey: [
+      "guest-houses",
+      page,
+      search,
+      hasParking,
+      country,
+      isPetFriendly,
+    ],
     queryFn: () =>
       apiClient.get(
-        `/guest-house/all?page=${page}&search=${search}&country=${country}`
+        `/guest-house/all?page=${page}&search=${search}&country=${country}&hasParking=${hasParking}&isPetFriendly=${isPetFriendly}`
       ),
   });
 
@@ -58,8 +67,33 @@ export default function Page() {
           options={governorates.map((e) => {
             return { value: e, label: e };
           })}
-        />{" "}
-        {/* <FilterButton filterName="isActive" options={governorates} /> */}
+        />
+        <FilterButton
+          filterName="hasParking"
+          options={[
+            {
+              id: "true",
+              label: "Has Parking",
+            },
+            {
+              id: "false",
+              label: "No Parking",
+            },
+          ]}
+        />
+        <FilterButton
+          filterName="isPetFriendly"
+          options={[
+            {
+              id: "true",
+              label: "Pet Friendly",
+            },
+            {
+              id: "false",
+              label: "Not Pet Friendly",
+            },
+          ]}
+        />
         <div className="flex flex-1 justify-end">
           <Button
             variant="primary"
