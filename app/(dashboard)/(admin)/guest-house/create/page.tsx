@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { GuestHouse, guestHouseSchema } from "./_components/schema";
 import InitialInformation from "./_components/initial-information";
+import ImageSection from "./_components/image-section";
 
 const page = () => {
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
@@ -58,8 +59,8 @@ const page = () => {
       />
 
       <h1 className="text-3xl font-semibold mb-3">Create Guest House</h1>
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4 w-full">
-        <div className="col-span-4">
+      <div className="grid grid-cols-1 md:grid-cols-8 gap-4 w-full">
+        <div className="md:col-span-5">
           <InitialInformation
             formData={formData}
             updateForm={handleFormChange}
@@ -71,6 +72,14 @@ const page = () => {
               "hasParking",
               "isPetFriendly",
             ])}
+          />
+        </div>
+        <div className="md:col-span-3"></div>
+        <div className="md:col-span-8">
+          <ImageSection
+            formData={formData}
+            updateForm={handleFormChange}
+            errors={getErrorsForSection(["images"])}
           />
         </div>
       </div>

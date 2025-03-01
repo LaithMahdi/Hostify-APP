@@ -7,12 +7,14 @@ interface Props {
   imageUrl: string;
   onChange: (url: string) => void;
   errorMessage?: string;
+  onRemove?: () => void;
 }
 
 const ImageUploader: React.FC<Props> = ({
   imageUrl,
   onChange,
   errorMessage,
+  onRemove,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +61,10 @@ const ImageUploader: React.FC<Props> = ({
             <Button
               size="sm"
               className="!h-8 !p-3 bg-red-500/20 text-red-500 hover:bg-red-500/30"
-              onClick={() => onChange("")}
+              onClick={() => {
+                onRemove && onRemove;
+                onChange("");
+              }}
             >
               Delete
             </Button>
