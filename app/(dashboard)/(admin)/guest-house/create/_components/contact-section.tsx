@@ -70,7 +70,7 @@ const ContactSection = ({ formData, errors, updateForm }: Props) => {
     <div className="flex flex-col space-y-3 p-4 border rounded-lg w-full">
       <div className="flex flex-row justify-between">
         <div className="flex flex-col space-y-1">
-          <h1 className="text-2xl font-semibold">Add Contact Information</h1>
+          <h1 className="text-xl font-semibold">Add Contact Information</h1>
           <p className="text-gray-500 text-sm">
             Add contact information of the guest house. You can add multiple
             contacts.

@@ -6,6 +6,7 @@ import { GuestHouse, guestHouseSchema } from "./_components/schema";
 import InitialInformation from "./_components/initial-information";
 import ImageSection from "./_components/image-section";
 import ContactSection from "./_components/contact-section";
+import RoomSection from "./_components/room-section";
 
 const page = () => {
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
@@ -81,6 +82,13 @@ const page = () => {
             formData={formData}
             updateForm={handleFormChange}
             errors={getErrorsForSection(["contacts"])}
+          />
+        </div>
+        <div className="md:col-span-8">
+          <RoomSection
+            formData={formData}
+            updateForm={handleFormChange}
+            errors={getErrorsForSection(["rooms"])}
           />
         </div>
         <div className="md:col-span-8">

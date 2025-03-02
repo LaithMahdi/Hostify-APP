@@ -27,7 +27,7 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
   return (
     <div className="flex flex-col space-y-3 p-4 border rounded-lg w-full">
       <div className="flex flex-col space-y-1">
-        <h1 className="text-2xl font-semibold">Initial Information</h1>
+        <h1 className="text-xl font-semibold">Initial Information</h1>
         <p className="text-gray-500 text-sm">
           This information will be used to create the guest house.
         </p>
