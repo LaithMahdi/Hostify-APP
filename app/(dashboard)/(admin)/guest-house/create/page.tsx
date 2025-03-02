@@ -5,6 +5,7 @@ import { z } from "zod";
 import { GuestHouse, guestHouseSchema } from "./_components/schema";
 import InitialInformation from "./_components/initial-information";
 import ImageSection from "./_components/image-section";
+import ContactSection from "./_components/contact-section";
 
 const page = () => {
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
@@ -37,6 +38,7 @@ const page = () => {
         }
         return acc[key];
       }, newFormData);
+      console.log("newFormData", newFormData);
       return newFormData;
     });
   };
@@ -74,7 +76,13 @@ const page = () => {
             ])}
           />
         </div>
-        <div className="md:col-span-3"></div>
+        <div className="md:col-span-3">
+          <ContactSection
+            formData={formData}
+            updateForm={handleFormChange}
+            errors={getErrorsForSection(["contacts"])}
+          />
+        </div>
         <div className="md:col-span-8">
           <ImageSection
             formData={formData}
