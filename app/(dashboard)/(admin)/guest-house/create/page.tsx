@@ -7,6 +7,7 @@ import InitialInformation from "./_components/initial-information";
 import ImageSection from "./_components/image-section";
 import ContactSection from "./_components/contact-section";
 import RoomSection from "./_components/room-section";
+import { Button } from "@/components/ui/button";
 
 const page = () => {
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
@@ -44,7 +45,7 @@ const page = () => {
     });
   };
 
-  const handle = (e: React.FormEvent<HTMLFormElement>) => {
+  const handle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const result = guestHouseSchema.safeParse(formData);
 
@@ -53,15 +54,22 @@ const page = () => {
 
   return (
     <section className="flex flex-col items-start justify-start gap-2 w-full ">
-      <BreadCrumbList
-        breadCrumbs={[
-          { label: "Dashboard", href: "/" },
-          { label: "Guest house", href: "/guest-house" },
-          { label: "Create", href: "/guest-house/create" },
-        ]}
-      />
+      <div className="flex flex-row gap-2 justify-between w-full">
+        <div className="flex flex-col">
+          <BreadCrumbList
+            breadCrumbs={[
+              { label: "Dashboard", href: "/" },
+              { label: "Guest house", href: "/guest-house" },
+              { label: "Create", href: "/guest-house/create" },
+            ]}
+          />
 
-      <h1 className="text-3xl font-semibold mb-3">Create Guest House</h1>
+          <h1 className="text-3xl font-semibold mb-3">Create Guest House</h1>
+        </div>
+        <Button onClick={(e) => handle(e)} variant="primary">
+          Create
+        </Button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-8 gap-4 w-full">
         <div className="md:col-span-5">
           <InitialInformation
