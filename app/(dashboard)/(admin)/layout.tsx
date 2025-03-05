@@ -4,17 +4,18 @@ import Sidebar from "@/components/ui/components/sidebar";
 interface Props {
   children: React.ReactNode;
 }
-const DashboardLayout = ({ children }: Props) => {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-full">
-      <div className="h-[80px] md:pl-64 fixed inset-y-0 w-full z-50">
+      <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50">
         <Navbar />
       </div>
-      <div className="hidden md:flex min-h-screen lg:w-64 flex-col fixed inset-y-0 z-50">
+      <div className="hidden md:flex min-h-screen w-56 flex-col fixed inset-y-0 z-50">
         <Sidebar />
       </div>
-      <main className="md:pl-72 md:pr-12 pt-[60px] h-full">{children}</main>
-    
+      <main className="md:pl-56 pt-[80px] h-full">
+        <div className="p-4">{children}</div>
+      </main>
     </div>
   );
 };

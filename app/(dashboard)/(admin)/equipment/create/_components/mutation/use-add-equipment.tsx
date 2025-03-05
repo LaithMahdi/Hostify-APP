@@ -23,7 +23,7 @@ export function useAddEquipment() {
     onError: (error) => {
       toast({
         title: "Failed to create equipment",
-        variant: "destructive",
+        variant: "error",
       });
       console.error("error:", error);
     },

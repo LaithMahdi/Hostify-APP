@@ -1,8 +1,8 @@
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { formSchema } from "../schema";
 import apiClient from "@/lib/api-client";
+import { formSchema } from "../../../../create/_components/schema";
 
 export function useUpdateEquipment({ id }: { id: number }) {
   const { toast } = useToast();
@@ -23,7 +23,7 @@ export function useUpdateEquipment({ id }: { id: number }) {
     onError: (error) => {
       toast({
         title: "Failed to updated equipment",
-        variant: "destructive",
+        variant: "success",
       });
       console.error("error:", error);
     },

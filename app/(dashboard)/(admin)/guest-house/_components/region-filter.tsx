@@ -19,7 +19,7 @@ import {
 import { useState } from "react";
 import { parseAsString, useQueryState } from "nuqs";
 import { useUpdateSearchParams } from "@/hooks/use-set-search-param";
-// import { useUpdateSearchParams } from "@/hooks/use-update-search-param"; // Adjust the import path
+import { useSearchParams } from "next/navigation";
 
 interface Option {
   value: string;
@@ -33,6 +33,7 @@ interface Props {
 }
 
 export function RegionFilter({ filterName, title, options }: Props) {
+  const searchParams = useSearchParams();
   const [selected, setSelected] = useQueryState(
     filterName,
     parseAsString.withDefault("")
@@ -41,6 +42,8 @@ export function RegionFilter({ filterName, title, options }: Props) {
   const [page, setPage] = useQueryState("page", parseAsString);
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>(selected);
+
+  const search = searchParams.get(filterName) || "";
 
   const { deleteSearchParam } = useUpdateSearchParams();
 
@@ -83,7 +86,7 @@ export function RegionFilter({ filterName, title, options }: Props) {
                   <CommandItem
                     key={option.value}
                     value={option.value}
-                    onSelect={handleSelect} // Use the new handleSelect function
+                    onSelect={handleSelect}
                   >
                     <Check
                       className={cn(
@@ -99,7 +102,7 @@ export function RegionFilter({ filterName, title, options }: Props) {
           </Command>
         </PopoverContent>
       </Popover>
-      {value !== "Select..." && (
+      {search !== "" && (
         <Button
           onClick={() => {
             setValue("");
