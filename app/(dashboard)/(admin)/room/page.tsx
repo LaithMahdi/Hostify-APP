@@ -22,11 +22,11 @@ export default function Page() {
   );
 
   const search = searchParams.get("search") || "";
-  const status = searchParams.get("BOOKED") || ""; 
+  const status = searchParams.get("BOOKED") || "";
   const isActive = searchParams.get("AVAILABLE") || "";
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: ["rooms", page, search, status, isActive], 
+    queryKey: ["rooms", page, search, status, isActive],
     queryFn: () =>
       apiClient.get(
         `/room/all?page=${page}&search=${search}&roomNumber=${status}&isActive=${isActive}`
@@ -57,8 +57,7 @@ export default function Page() {
         </span>
       </h1>
       <div className="flex items-center flex-col md:flex-row gap-2 w-full">
-
-        <Search placeholder="Search by room number..." filterName="roomNumber" />
+        <Search placeholder="Search by room number..." />
         <FilterButton filterName="isActive" options={options} />
         <div className="flex flex-1 justify-end">
           <Button
