@@ -119,7 +119,7 @@ const page = () => {
             breadCrumbs={[
               { label: "Dashboard", href: "/" },
               { label: "Guest house", href: "/guest-house" },
-              { label: "Create", href: "/guest-house/update" },
+              { label: "Update", href: "/guest-house/update" },
               { label: `${id}`, href: `/guest-house/update/${id}` },
             ]}
           />
@@ -127,7 +127,7 @@ const page = () => {
           <h1 className="text-3xl font-semibold mb-3">Update Guest House</h1>
         </div>
         <Button onClick={(e) => handle(e)} variant="primary" loading={loading}>
-          Create
+          Update
         </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-8 gap-4 w-full">

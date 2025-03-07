@@ -9,6 +9,7 @@ import {
 import { ListFilter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { parseAsString, useQueryState } from "nuqs";
+import { Separator } from "../ui/separator";
 
 interface Option {
   id: string;
@@ -78,24 +79,17 @@ export default function FilterButton({ title, options, filterName }: Props) {
                   </Label>
                 </div>
               ))}
-              <div role="separator" className="-mx-3 my-1 h-px bg-border"></div>
-              <div className="flex justify-between gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="!h-7 !px-2 text-xs"
-                  onClick={handleClearFilter}
-                  type="button"
-                >
-                  Clear
-                </Button>
-                <Button
-                  size="sm"
-                  className="!h-7 !px-2 text-xs bg-mainColor hover:bg-mainColor/90"
-                >
-                  Apply
-                </Button>
-              </div>
+              <Separator />
+
+              <Button
+                size="sm"
+                variant="outline"
+                className="!h-7 !px-2 text-xs w-full"
+                onClick={handleClearFilter}
+                type="button"
+              >
+                Clear
+              </Button>
             </form>
           </div>
         </PopoverContent>
