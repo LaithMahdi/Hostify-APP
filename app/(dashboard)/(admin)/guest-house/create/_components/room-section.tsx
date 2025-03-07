@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { GuestHouse } from "./schema";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/lib/api-client";
 import { BedSingle } from "lucide-react";
@@ -22,21 +22,21 @@ const RoomSection = ({ formData, errors, updateForm }: Props) => {
     formData.rooms?.map((room) => room) || []
   );
 
+  useEffect(() => {
+    setIds(formData.rooms || []);
+  }, [formData.rooms]);
+
   const getErrorMessage = (field: string) => {
     const error = errors.find((e) => e.path.includes(field));
     return error ? error.message : "";
   };
-
   const updateRooms = (id: number) => {
     const newIds = ids.includes(id)
       ? ids.filter((roomId) => roomId !== id)
       : [...ids, id];
 
     setIds(newIds);
-    updateForm(
-      "rooms",
-      newIds.map((id) => ({ id }))
-    );
+    updateForm("rooms", newIds);
   };
 
   return (

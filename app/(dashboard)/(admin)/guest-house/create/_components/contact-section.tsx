@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { GuestHouse } from "./schema";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon, X } from "lucide-react";
 import { contactsList, ContactType } from "./types";
@@ -25,6 +25,14 @@ const ContactSection = ({ formData, errors, updateForm }: Props) => {
       : [{ type: ContactType.PHONE, value: "" }]
   );
 
+  useEffect(() => {
+    if (formData.contacts && formData.contacts.length > 0) {
+      setContacts(formData.contacts);
+    } else {
+      setContacts([{ type: ContactType.PHONE, value: "" }]);
+    }
+  }, [formData.contacts]);
+
   const getErrorMessage = (field: string) => {
     const error = errors.find((e) => e.path.includes(field));
     return error ? error.message : "";
@@ -33,37 +41,27 @@ const ContactSection = ({ formData, errors, updateForm }: Props) => {
   const addContact = () => {
     const newContact = [...contacts, { type: ContactType.PHONE, value: "" }];
     setContacts(newContact);
-    updateForm(
-      "contacts",
-      newContact.filter((contact) => contact.value !== "")
-    );
+    updateForm("contacts", newContact);
   };
 
-  const updateContacts = (
-    index: number,
-    field: string,
-    value: string | ContactType
-  ) => {
-    const newContact = contacts.map((contact, i) => {
-      if (i === index) {
-        return { ...contact, [field]: value };
-      }
-      return contact;
-    });
-    setContacts(newContact);
-    updateForm(
-      "contacts",
-      newContact.filter((contact) => contact.value !== "")
-    );
-  };
+  const updateContacts = useCallback(
+    (index: number, field: string, value: string | ContactType) => {
+      const newContact = contacts.map((contact, i) => {
+        if (i === index) {
+          return { ...contact, [field]: value };
+        }
+        return contact;
+      });
+      setContacts(newContact);
+      updateForm("contacts", newContact);
+    },
+    [contacts, updateForm]
+  );
 
   const removeContact = (index: number) => {
     const newContacts = contacts.filter((_, i) => i !== index);
     setContacts(newContacts);
-    updateForm(
-      "contacts",
-      newContacts.filter((contact) => contact.value !== "")
-    );
+    updateForm("contacts", newContacts);
   };
 
   return (

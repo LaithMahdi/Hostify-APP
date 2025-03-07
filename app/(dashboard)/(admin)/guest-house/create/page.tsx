@@ -8,9 +8,12 @@ import ImageSection from "./_components/image-section";
 import ContactSection from "./_components/contact-section";
 import RoomSection from "./_components/room-section";
 import { Button } from "@/components/ui/button";
+import { useAddGuestHouse } from "./_components/mutation/use-add-guest-house";
+import { toast } from "@/hooks/use-toast";
 
 const page = () => {
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<GuestHouse>({
     name: "",
@@ -23,6 +26,8 @@ const page = () => {
     rooms: [],
     images: [],
   });
+
+  const addMutation = useAddGuestHouse();
 
   const getErrorsForSection = (fields: string | string[]) => {
     const fieldArray = Array.isArray(fields) ? fields : [fields];
@@ -49,7 +54,48 @@ const page = () => {
     e.preventDefault();
     const result = guestHouseSchema.safeParse(formData);
 
-    console.log("result", result);
+    if (!result.success) {
+      setValidationErrors(result.error.issues);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      addMutation.mutate(result.data);
+      toast({
+        title: "Succés",
+        description: "Equipment created successfully",
+      });
+      handleReset();
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "An error occurred",
+        variant: "success",
+      });
+      setLoading(true);
+    }
+  };
+
+  const handleReset = () => {
+    const defaultFormData = {
+      name: "",
+      address: "",
+      region: "",
+      description: "",
+      hasParking: false,
+      isPetFriendly: false,
+      contacts: [],
+      rooms: [],
+      images: [],
+    };
+
+    setFormData(defaultFormData);
+    setValidationErrors([]);
+
+    console.log("Form reset to:", defaultFormData); // Debugging
   };
 
   return (
@@ -66,7 +112,7 @@ const page = () => {
 
           <h1 className="text-3xl font-semibold mb-3">Create Guest House</h1>
         </div>
-        <Button onClick={(e) => handle(e)} variant="primary">
+        <Button onClick={(e) => handle(e)} variant="primary" loading={loading}>
           Create
         </Button>
       </div>

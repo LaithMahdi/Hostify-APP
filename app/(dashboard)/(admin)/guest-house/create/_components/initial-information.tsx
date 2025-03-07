@@ -54,7 +54,10 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
             Region
             <span className="text-base font-semibold text-red-500">*</span>
           </Label>
-          <Select>
+          <Select
+            value={formData.region}
+            onValueChange={(value) => updateForm("region", value)}
+          >
             <SelectTrigger className="rounded-lg py-5 shadow-none ">
               <SelectValue placeholder="Enter the region" />
             </SelectTrigger>

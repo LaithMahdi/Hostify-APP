@@ -2,7 +2,7 @@ import { z } from "zod";
 import { GuestHouse } from "./schema";
 import { Label } from "@/components/ui/label";
 import ImageUploader from "@/components/shared/image-uploader";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Add useEffect
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon, Trash } from "lucide-react";
 
@@ -13,9 +13,19 @@ interface Props {
 }
 
 const ImageSection = ({ formData, errors, updateForm }: Props) => {
+  // Initialize local state with formData.images
   const [images, setImages] = useState<string[]>(
     formData.images && formData.images.length > 0 ? formData.images : [""]
   );
+
+  // Sync local state with formData.images
+  useEffect(() => {
+    if (formData.images && formData.images.length > 0) {
+      setImages(formData.images);
+    } else {
+      setImages([""]);
+    }
+  }, [formData.images]);
 
   const getErrorMessage = (field: string) => {
     const error = errors.find((e) => e.path.includes(field));
@@ -25,10 +35,6 @@ const ImageSection = ({ formData, errors, updateForm }: Props) => {
   const addImage = () => {
     const newImages = [...images, ""];
     setImages(newImages);
-    updateForm(
-      "images",
-      newImages.filter((url) => url !== "")
-    );
   };
 
   const updateImages = (index: number, url: string) => {
