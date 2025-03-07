@@ -1,6 +1,6 @@
 "use client";
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { GuestHouse, guestHouseSchema } from "./_components/schema";
 import InitialInformation from "./_components/initial-information";
@@ -8,26 +8,55 @@ import ImageSection from "./_components/image-section";
 import ContactSection from "./_components/contact-section";
 import RoomSection from "./_components/room-section";
 import { Button } from "@/components/ui/button";
-import { useAddGuestHouse } from "./_components/mutation/use-add-guest-house";
+import { useUpdateGuestHouse } from "./_components/mutation/use-update-guest-house";
 import { toast } from "@/hooks/use-toast";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/lib/api-client";
+import { ContactType } from "./_components/types";
 
 const page = () => {
+  const { id } = useParams();
+
+  const { isFetching, data } = useQuery<DataType>({
+    queryKey: ["guest-house-by-id", id],
+    queryFn: () => apiClient.get(`/guest-house/${id}`),
+  });
+
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const item = data?.data.data;
+
   const [formData, setFormData] = useState<GuestHouse>({
-    name: "",
-    address: "",
-    region: "",
-    description: "",
-    hasParking: false,
-    isPetFriendly: false,
-    contacts: [],
-    rooms: [],
-    images: [],
+    name: item?.name ?? "",
+    address: item?.address ?? "",
+    region: item?.region ?? "",
+    description: item?.description ?? "",
+    hasParking: item?.hasParking ?? false,
+    isPetFriendly: item?.isPetFriendly ?? false,
+    contacts: item?.contacts ?? [],
+    rooms: item?.rooms.map((room: { id: number }) => room.id) ?? [],
+    images: item?.images.map((image: { url: string }) => image.url) ?? [],
   });
 
-  const addMutation = useAddGuestHouse();
+  useEffect(() => {
+    if (item) {
+      setFormData({
+        name: item.name,
+        address: item.address,
+        region: item.region,
+        description: item.description,
+        hasParking: item.hasParking,
+        isPetFriendly: item.isPetFriendly,
+        contacts: item.contacts,
+        rooms: item.rooms.map((room: { id: number }) => room.id),
+        images: item.images.map((image: { url: string }) => image.url),
+      });
+    }
+  }, [item]);
+
+  const updateMutation = useUpdateGuestHouse({ id: Number(id) });
 
   const getErrorsForSection = (fields: string | string[]) => {
     const fieldArray = Array.isArray(fields) ? fields : [fields];
@@ -61,12 +90,11 @@ const page = () => {
 
     setLoading(true);
     try {
-      addMutation.mutate(result.data);
+      updateMutation.mutate(result.data);
       toast({
-        title: "Succes",
-        description: "Guest house created successfully",
+        title: "Success",
+        description: "Guest house updated successfully",
       });
-      handleReset();
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -79,24 +107,9 @@ const page = () => {
     }
   };
 
-  const handleReset = () => {
-    const defaultFormData = {
-      name: "",
-      address: "",
-      region: "",
-      description: "",
-      hasParking: false,
-      isPetFriendly: false,
-      contacts: [],
-      rooms: [],
-      images: [],
-    };
-
-    setFormData(defaultFormData);
-    setValidationErrors([]);
-
-    console.log("Form reset to:", defaultFormData); // Debugging
-  };
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="flex flex-col items-start justify-start gap-2 w-full ">
@@ -106,11 +119,12 @@ const page = () => {
             breadCrumbs={[
               { label: "Dashboard", href: "/" },
               { label: "Guest house", href: "/guest-house" },
-              { label: "Create", href: "/guest-house/create" },
+              { label: "Create", href: "/guest-house/update" },
+              { label: `${id}`, href: `/guest-house/update/${id}` },
             ]}
           />
 
-          <h1 className="text-3xl font-semibold mb-3">Create Guest House</h1>
+          <h1 className="text-3xl font-semibold mb-3">Update Guest House</h1>
         </div>
         <Button onClick={(e) => handle(e)} variant="primary" loading={loading}>
           Create
@@ -158,3 +172,33 @@ const page = () => {
 };
 
 export default page;
+
+export type DataType = {
+  data: {
+    data: Item;
+  };
+};
+
+export type Item = {
+  id: number;
+  name: string;
+  address: string;
+  region: string;
+  description: string;
+  rating: number;
+  hasParking: boolean;
+  isPetFriendly: boolean;
+  rooms: Array<{
+    id: number;
+  }>;
+  images: Array<{
+    id: number;
+    url: string;
+  }>;
+  contacts: Array<{
+    id: number;
+    type: ContactType;
+    value: string;
+  }>;
+  createdAt: string;
+};
