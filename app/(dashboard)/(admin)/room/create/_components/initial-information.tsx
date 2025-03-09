@@ -3,7 +3,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { roomTypes, statusTypes } from "./constants";
 
 interface Room {
@@ -38,7 +44,9 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="roomNumber">Room Number<span className="text-red-500">*</span></Label>
+        <Label htmlFor="roomNumber">
+          Room Number<span className="text-red-500">*</span>
+        </Label>
         <Input
           id="roomNumber"
           value={formData.roomNumber}
@@ -46,22 +54,30 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           placeholder="Enter the room number"
           className="rounded-lg py-2 shadow-none"
         />
-        {getErrorMessage("roomNumber") && <p className="text-red-500">{getErrorMessage("roomNumber")}</p>}
+        {getErrorMessage("roomNumber") && (
+          <p className="text-red-500">{getErrorMessage("roomNumber")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="type">Type<span className="text-red-500">*</span></Label>
+        <Label htmlFor="type">
+          Type<span className="text-red-500">*</span>
+        </Label>
         <Select onValueChange={(value) => updateForm("type", value)}>
           <SelectTrigger className="rounded-lg py-2 shadow-none">
             <SelectValue placeholder="Select room type" />
           </SelectTrigger>
           <SelectContent>
             {roomTypes.map((type) => (
-              <SelectItem key={type} value={type}>{type}</SelectItem>
+              <SelectItem key={type} value={type}>
+                {type}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        {getErrorMessage("type") && <p className="text-red-500">{getErrorMessage("type")}</p>}
+        {getErrorMessage("type") && (
+          <p className="text-red-500">{getErrorMessage("type")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -76,19 +92,25 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
         />
       </div>
 
-        <div className="space-y-2">
-        <Label htmlFor="status">status<span className="text-red-500">*</span></Label>
+      <div className="space-y-2">
+        <Label htmlFor="status">
+          status<span className="text-red-500">*</span>
+        </Label>
         <Select onValueChange={(value) => updateForm("status", value)}>
           <SelectTrigger className="rounded-lg py-2 shadow-none">
             <SelectValue placeholder="Select room statut" />
           </SelectTrigger>
           <SelectContent>
             {statusTypes.map((status) => (
-              <SelectItem key={status} value={status}>{status}</SelectItem>
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        {getErrorMessage("status") && <p className="text-red-500">{getErrorMessage("status")}</p>}
+        {getErrorMessage("status") && (
+          <p className="text-red-500">{getErrorMessage("status")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -115,7 +137,15 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
       </div>
 
       <div className="flex justify-between items-center border py-2 px-4 rounded-lg">
-        <Label htmlFor="hasBalcony">Has Balcony</Label>
+        <div className="space-y-1">
+          <Label htmlFor="hasBalcony" className="text-slate-900 font-normal">
+            Has Balcony
+          </Label>
+          <p className="text-xs text-slate-500">
+            Check this if the room has a balcony. This will be displayed on the
+            room details page.
+          </p>
+        </div>
         <Switch
           checked={formData.hasBalcony}
           onCheckedChange={(value) => updateForm("hasBalcony", value)}
@@ -123,7 +153,15 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
       </div>
 
       <div className="flex justify-between items-center border py-2 px-4 rounded-lg">
-        <Label htmlFor="isActive">Active</Label>
+        <div className="space-y-1">
+          <Label htmlFor="isActive" className="text-slate-900 font-normal">
+            Is Active
+          </Label>
+          <p className="text-xs text-slate-500">
+            Check this if the room is active. This will be displayed on the room
+            details page.
+          </p>
+        </div>
         <Switch
           checked={formData.isActive}
           onCheckedChange={(value) => updateForm("isActive", value)}
