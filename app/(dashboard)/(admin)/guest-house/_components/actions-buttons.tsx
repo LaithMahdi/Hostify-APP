@@ -3,6 +3,7 @@ import { PencilIcon, TrashIcon } from "lucide-react";
 import { Item } from "../page";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import DeleteButton from "./delete-button";
 
 interface Props {
   data: Item;
@@ -31,11 +32,11 @@ const ActionsButtons = ({ data }: Props) => {
         <TrashIcon className="text-red-600" />
       </Button>
 
-      {/* <DeleteButton
+      <DeleteButton
         data={data}
         open={openDelete}
         onOpenChange={setOpenDelete}
-      /> */}
+      />
     </div>
   );
 };
