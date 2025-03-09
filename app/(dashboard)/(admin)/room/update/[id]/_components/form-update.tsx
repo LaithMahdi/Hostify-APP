@@ -1,182 +1,170 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import BreadCrumbList from "@/components/shared/bread-crumb-list";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
+
+
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import { Item } from "../../../page";
-import { formSchema } from "../../../create/_components/schema";
+import { toast } from "@/hooks/use-toast";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "@/lib/api-client";
+import InitialInformation from "./initial-information";
+import EquipmentSection from "./equipement-section";
+import ImageSection from "./image-section";
 import { useUpdateRoom } from "./mutation/use-update-room";
+import { roomSchema } from "./schema";
 
-// const formSchema = z.object({
-//   roomNumber: z.coerce.number().min(1, "Room number must be at least 1"),
-//   type: z.string().min(1, "Type is required"),
-//   pricePerNight: z.coerce.number().min(0, "Price must be at least 0"),
-//   status: z.string().min(1, "Status is required"),
-//   capacity: z.coerce.number().min(1, "Capacity must be at least 1"),
-//   hasBalcony: z.boolean(),
-//   description: z.string().optional(),
-//   guestHouseId: z.coerce.number().min(1, "Guest House ID is required"),
-//   images: z.array(z.string()).optional(),
-//   equipment: z.array(z.string()).optional(),
-//   isActive: z.boolean(),
-// });
 
-interface Props {
-  item: Item;
-}
 
-const FormUpdate = ({ item }: Props) => {
-  // const [imageUrls, setImageUrls] = useState<string[]>(item.images || []);
-  const { toast } = useToast();
-  const updateRoom = useUpdateRoom({ id: item.id });
+const Page = () => {
+  const { id } = useParams();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      roomNumber: item.roomNumber ?? 0,
-      type: item.type ?? "",
-      pricePerNight: item.pricePerNight ?? 0,
-      status: item.status ?? "",
-      capacity: item.capacity ?? 0,
-      hasBalcony: item.hasBalcony ?? false,
-      description: item.description ?? "",
-      guestHouseId: item.guestHouseId,
-      // images: item.images ?? [],
-      equipment: item.equipment ?? [],
-      isActive: item.isActive ?? false,
-    },
+  const { isFetching, data } = useQuery<DataType>({
+    queryKey: ["room-by-id", id],
+    queryFn: () => apiClient.get(`/room/${id}`).then(res => res.data),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    updateRoom.mutate(values, {
+  const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const item = data?.data;
+
+  const [formData, setFormData] = useState<Item>({
+    roomNumber: item?.roomNumber ?? 0,
+    type: item?.type ?? "",
+    pricePerNight: item?.pricePerNight ?? 0,
+    status: item?.status ?? "",
+    capacity: item?.capacity ?? 0,
+    hasBalcony: item?.hasBalcony ?? false,
+    isActive: item?.isActive ?? false,
+    description: item?.description ?? "",
+    equipment: item?.equipment ?? [],
+    images: item?.images ? item.images.map((image) => image.url) : [],
+
+  });
+
+  useEffect(() => {
+    if (item) {
+      setFormData({
+        roomNumber: item.roomNumber,
+        type: item.type,
+        pricePerNight: item.pricePerNight,
+        status: item.status,
+        capacity: item.capacity,
+        hasBalcony: item.hasBalcony,
+        isActive: item.isActive,
+        description: item.description,
+        equipment: item.equipment,
+        images: item?.images ? item.images.map((image) => image.url) : [],
+
+      });
+    }
+  }, [item]);
+
+  const updateMutation = useUpdateRoom({ id: Number(id) });
+
+  const getErrorsForSection = (fields: string | string[]) => {
+    const fieldArray = Array.isArray(fields) ? fields : [fields];
+    return validationErrors.filter((error) =>
+      fieldArray.includes(String(error.path[0]))
+    );
+  };
+
+  const handleFormChange = (key: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const result = roomSchema.safeParse(formData);
+
+    if (!result.success) {
+      setValidationErrors(result.error.issues);
+      return;
+    }
+
+    setLoading(true);
+    updateMutation.mutate(result.data, {
       onSuccess: () => {
-        toast({ title: "Success", description: "Room updated successfully" });
+        toast({ title: "Success", description: "room updated successfully" });
+        setLoading(false);
       },
-      onError: (error) => {
-        console.error(error);
-        toast({
-          title: "Error",
-          description: "An error occurred while updating the room",
-          variant: "error",
-        });
+      onError: () => {
+        toast({ title: "Error", description: "An error occurred", variant: "error" });
+        setLoading(false);
       },
     });
-  }
+  };
 
-  function handleReset() {
-    form.reset();
-    // setImageUrls(item.images || []);
+  if (isFetching) {
+    return <div>Loading...</div>;
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full"
-      >
-        <FormField
-          control={form.control}
-          name="roomNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Room Number</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="pricePerNight"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price Per Night</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="hasBalcony"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Has Balcony</FormLabel>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={(checked) => field.onChange(checked)}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        {/* <ImageUploader
-          imageUrl={imageUrls}
-          onChange={(url: string) => {
-            const updatedUrls = [...imageUrls, url];
-            setImageUrls(updatedUrls);
-            form.setValue("images", updatedUrls);
-          }}
-        /> */}
-
-        <div className="flex flex-row gap-2">
-          <Button type="reset" variant="outline" onClick={handleReset}>
-            Reset
-          </Button>
-          <Button type="submit" variant="primary">
-            Update Room
-          </Button>
+    <section className="flex flex-col items-start justify-start gap-2 w-full">
+      <div className="flex flex-row gap-2 justify-between w-full">
+        <h1 className="text-3xl font-semibold mb-3">Update room</h1>
+        <Button onClick={handleSubmit} variant="primary" disabled={loading}>
+          {loading ? "Updating..." : "Update"}
+        </Button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-8 gap-4 w-full">
+        <div className="md:col-span-5">
+          <InitialInformation
+            formData={formData}
+            updateForm={handleFormChange}
+            errors={getErrorsForSection([
+              "roomNumber",
+              "type",
+              "pricePerNight",
+              "status",
+              "capacity",
+              "hasBalcony",
+              "isActive",
+              "description",
+            ])}
+          />
         </div>
-      </form>
-    </Form>
+        <div className="md:col-span-3">
+          <EquipmentSection
+            formData={formData}
+            updateForm={handleFormChange}
+            errors={getErrorsForSection(["equipment"])}
+          />
+        </div>
+        <div className="md:col-span-8">
+          <ImageSection
+            formData={formData}
+            updateForm={handleFormChange}
+            errors={getErrorsForSection(["images"])}
+          />
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default FormUpdate;
+export default Page;
+
+export type DataType = {
+  data: Item;
+};
+
+export type Item = {
+  id: number;
+  roomNumber: number;
+  type: string;
+  description: string;
+  pricePerNight: number;
+  status: string;
+  hasBalcony: boolean;
+  isActive: boolean;
+  capacity: number;
+  equipment: Array<{ id: number }>;
+  images: Array<{ id: number; url: string }>;
+  createdAt: string;
+};

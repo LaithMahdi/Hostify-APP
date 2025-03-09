@@ -4,15 +4,15 @@ import FormCreate from "./_components/form-create";
 const page = () => {
   return (
     <section className="flex flex-col items-start justify-start gap-2 w-full">
-      <BreadCrumbList
+      {/* <BreadCrumbList
         breadCrumbs={[
           { label: "Dashboard", href: "/" },
           { label: "Room", href: "/room" },
           { label: "Create", href: "/room/create" },
         ]}
-      />
+      /> */}
 
-      <h1 className="text-3xl font-semibold mb-3">Create Room</h1>
+      {/* <h1 className="text-3xl font-semibold mb-3">Create Room</h1> */}
 
       <FormCreate />
     </section>

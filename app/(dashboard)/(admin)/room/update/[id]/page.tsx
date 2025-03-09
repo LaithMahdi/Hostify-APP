@@ -39,8 +39,8 @@ const Page = () => {
         ]}
       />
 
-      <h1 className="text-3xl font-semibold mb-3">Update Room</h1>
-      {JSON.stringify(data)}
+      {/* <h1 className="text-3xl font-semibold mb-3">Update Room</h1> */}
+      {/* {JSON.stringify(data)} */}
       {data && <FormUpdate item={data.data} />}
     </section>
   );
