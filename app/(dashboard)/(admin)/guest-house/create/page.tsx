@@ -95,7 +95,7 @@ const page = () => {
     setFormData(defaultFormData);
     setValidationErrors([]);
 
-    console.log("Form reset to:", defaultFormData); // Debugging
+    console.log("Form reset to:", defaultFormData);
   };
 
   return (

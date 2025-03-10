@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { Label } from "@/components/ui/label";
 import ImageUploader from "@/components/shared/image-uploader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon, Trash } from "lucide-react";
 import { Room } from "./schema";
@@ -17,6 +17,14 @@ const ImageSection = ({ formData, errors, updateForm }: Props) => {
   const [images, setImages] = useState<string[]>(
     formData.images && formData.images.length > 0 ? formData.images : [""]
   );
+
+  useEffect(() => {
+    if (formData.images && formData.images.length > 0) {
+      setImages(formData.images);
+    } else {
+      setImages([""]);
+    }
+  }, [formData.images]);
 
   const getErrorMessage = (field: string) => {
     const error = errors.find((e) => e.path.includes(field));

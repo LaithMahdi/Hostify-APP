@@ -11,22 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { roomTypes, statusTypes } from "./constants";
-
-interface Room {
-  roomNumber: string;
-  type: string;
-  pricePerNight: number;
-  status: string;
-  capacity: number;
-  hasBalcony: boolean;
-  description: string;
-  isActive: boolean;
-  images: string[];
-}
+import { Room } from "./schema";
 
 interface Props {
   formData: Room;
-  updateForm: (path: keyof Room, value: any) => void;
+  updateForm: (path: string, value: any) => void;
   errors: z.ZodIssue[];
 }
 
@@ -49,9 +38,10 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
         </Label>
         <Input
           id="roomNumber"
+          type="number"
           value={formData.roomNumber}
-          onChange={(e) => updateForm("roomNumber", e.target.value)}
-          placeholder="Enter the room number"
+          onChange={(e) => updateForm("roomNumber", Number(e.target.value))}
+          placeholder="Enter price per night"
           className="rounded-lg py-2 shadow-none"
         />
         {getErrorMessage("roomNumber") && (
@@ -69,8 +59,8 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           </SelectTrigger>
           <SelectContent>
             {roomTypes.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
+              <SelectItem key={type.value} value={type.value}>
+                {type.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -90,6 +80,9 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           placeholder="Enter price per night"
           className="rounded-lg py-2 shadow-none"
         />
+        {getErrorMessage("pricePerNight") && (
+          <p className="text-red-500">{getErrorMessage("pricePerNight")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -102,8 +95,8 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           </SelectTrigger>
           <SelectContent>
             {statusTypes.map((status) => (
-              <SelectItem key={status} value={status}>
-                {status}
+              <SelectItem key={status.value} value={status.value}>
+                {status.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -123,6 +116,9 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           placeholder="Enter the room capacity"
           className="rounded-lg py-2 shadow-none"
         />
+        {getErrorMessage("capacity") && (
+          <p className="text-red-500">{getErrorMessage("capacity")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -134,6 +130,9 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           placeholder="Enter a description of the room"
           className="rounded-lg py-2 shadow-none"
         />
+        {getErrorMessage("description") && (
+          <p className="text-red-500">{getErrorMessage("description")}</p>
+        )}
       </div>
 
       <div className="flex justify-between items-center border py-2 px-4 rounded-lg">

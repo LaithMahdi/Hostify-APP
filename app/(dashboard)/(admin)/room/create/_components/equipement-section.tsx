@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/lib/api-client";
 
@@ -40,6 +40,13 @@ const EquipmentSection = ({ formData, errors, updateForm }: Props) => {
       newIds.map((id) => ({ id }))
     );
   };
+
+  useEffect(() => {
+    setIds(
+      formData.equipments?.map((equipment: { id: number }) => equipment.id) ||
+        []
+    );
+  }, [formData.equipments]);
 
   if (isFetching) return <div>Loading...</div>;
 
