@@ -14,7 +14,7 @@ export function useAddRoom() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["room"],
+        queryKey: ["rooms"],
       });
       toast({
         title: "room created successfully",

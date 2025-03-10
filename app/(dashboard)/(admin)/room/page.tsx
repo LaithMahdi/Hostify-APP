@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
 import Items from "./_components/items";
+import { statusTypes } from "./create/_components/constants";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,22 +22,16 @@ export default function Page() {
     parseAsInteger.withDefault(1)
   );
 
-  const search = searchParams.get("search") || "";
-  const status = searchParams.get("BOOKED") || "";
-  const isActive = searchParams.get("AVAILABLE") || "";
+  const status = searchParams.get("status") || "";
+  const roomNumber = Number(searchParams.get("roomNumber") || "0");
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: ["rooms", page, search, status, isActive],
+    queryKey: ["rooms", page, status, roomNumber],
     queryFn: () =>
       apiClient.get(
-        `/room/all?page=${page}&search=${search}&roomNumber=${status}&isActive=${isActive}`
+        `/room/all?page=${page}&status=${status}&roomNumber=${roomNumber}`
       ),
   });
-
-  const options = [
-    { id: "true", label: "AVAILABLE" },
-    { id: "false", label: "BOOKED" },
-  ];
 
   const totalItems = data?.data.totalItems ? data.data.totalItems : 0;
   const hasNextPage = data?.data.pageInfo?.hasNextPage ?? false;
@@ -58,7 +53,13 @@ export default function Page() {
       </h1>
       <div className="flex items-center flex-col md:flex-row gap-2 w-full">
         <Search placeholder="Search by room number..." />
-        <FilterButton filterName="isActive" options={options} />
+        <FilterButton
+          filterName="status"
+          options={statusTypes.map((type) => ({
+            id: type.value,
+            label: type.label,
+          }))}
+        />
         <div className="flex flex-1 justify-end">
           <Button
             variant="primary"

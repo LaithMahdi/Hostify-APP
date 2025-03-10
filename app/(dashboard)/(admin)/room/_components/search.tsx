@@ -29,7 +29,7 @@ export default function Search({ placeholder }: Props) {
     if (debouncedValue) {
       setMultipleSearchParams([
         {
-          name: "search",
+          name: "roomNumber",
           value: debouncedValue,
         },
         {

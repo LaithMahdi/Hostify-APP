@@ -1,21 +1,21 @@
-enum roomtype {
+export enum Roomtype {
   SINGLE = "SIMPLE",
   DOUBLE = "DOUBLE",
   SUITE = "SUITE",
   FAMILY = "FAMILY",
 }
 
-enum RoomStatus {
+export enum RoomStatus {
   AVAILABLE = "AVAILABLE",
   BOOKED = "BOOKED",
   MAINTENANCE = "MAINTENANCE",
 }
 
 export const roomTypes = [
-  { label: "Simple", value: roomtype.SINGLE },
-  { label: "Double", value: roomtype.DOUBLE },
-  { label: "Suite", value: roomtype.SUITE },
-  { label: "Family", value: roomtype.FAMILY },
+  { label: "Simple", value: Roomtype.SINGLE },
+  { label: "Double", value: Roomtype.DOUBLE },
+  { label: "Suite", value: Roomtype.SUITE },
+  { label: "Family", value: Roomtype.FAMILY },
 ];
 
 export const statusTypes = [
