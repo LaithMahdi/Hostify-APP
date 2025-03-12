@@ -55,7 +55,7 @@ const FormUpdate = ({ item }: Props) => {
       toast({
         title: "Error",
         description: "An error occurred",
-        variant: "destructive",
+        variant: "error",
       });
     }
   }

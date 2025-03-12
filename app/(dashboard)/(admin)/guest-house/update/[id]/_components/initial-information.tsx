@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { governorates } from "../../_components/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { governorates } from "../../../_components/constants";
 
 interface Props {
   formData: GuestHouse;

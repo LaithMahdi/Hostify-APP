@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GuestHouse } from "./schema";
+import { room } from "./schema";
 import { Label } from "@/components/ui/label";
 import ImageUploader from "@/components/shared/image-uploader";
 import { useState, useEffect } from "react"; // Add useEffect
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { PlusCircleIcon, Trash } from "lucide-react";
 
 interface Props {
-  formData: GuestHouse;
+  formData: room;
   updateForm: (path: string, value: any) => void;
   errors: z.ZodIssue[];
 }

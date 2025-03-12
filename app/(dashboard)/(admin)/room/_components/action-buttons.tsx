@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { PencilIcon, TrashIcon } from "lucide-react";
-import { Item } from "../page";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import DeleteButton from "./delete-button";
+import { useRouter } from "next/navigation";
+import { Item } from "../page";
 
 interface Props {
   data: Item;
 }
 
-const ActionsButtons = ({ data }: Props) => {
+const ActionsButtons = ({ data }: Props) => {  // Ajout de 'data' ici
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const router = useRouter();
 
@@ -19,7 +19,7 @@ const ActionsButtons = ({ data }: Props) => {
         variant="outline"
         size="sm"
         className="!p-2"
-        onClick={() => router.push(`/guest-house/update/${data.id}`)}
+        onClick={() => router.push(`/room/update/${data.id}`)}  // Correction ici
       >
         <PencilIcon />
       </Button>
@@ -36,7 +36,7 @@ const ActionsButtons = ({ data }: Props) => {
         data={data}
         open={openDelete}
         onOpenChange={setOpenDelete}
-      />
+      /> 
     </div>
   );
 };

@@ -1,24 +1,23 @@
 import { z } from "zod";
-import { GuestHouse } from "./schema";
+
 import { Label } from "@/components/ui/label";
 import ImageUploader from "@/components/shared/image-uploader";
-import { useState, useEffect } from "react"; // Add useEffect
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircleIcon, Trash } from "lucide-react";
+import { Room } from "./schema";
 
 interface Props {
-  formData: GuestHouse;
+  formData: Room;
   updateForm: (path: string, value: any) => void;
   errors: z.ZodIssue[];
 }
 
 const ImageSection = ({ formData, errors, updateForm }: Props) => {
-  // Initialize local state with formData.images
   const [images, setImages] = useState<string[]>(
     formData.images && formData.images.length > 0 ? formData.images : [""]
   );
 
-  // Sync local state with formData.images
   useEffect(() => {
     if (formData.images && formData.images.length > 0) {
       setImages(formData.images);
@@ -35,6 +34,10 @@ const ImageSection = ({ formData, errors, updateForm }: Props) => {
   const addImage = () => {
     const newImages = [...images, ""];
     setImages(newImages);
+    updateForm(
+      "images",
+      newImages.filter((url) => url !== "")
+    );
   };
 
   const updateImages = (index: number, url: string) => {
