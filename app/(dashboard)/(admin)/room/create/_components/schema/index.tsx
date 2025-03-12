@@ -20,7 +20,7 @@ export const roomSchema = z.object({
   hasBalcony: z.boolean().default(false),
   description: z.string().min(1, { message: "La description est requise" }),
   isActive: z.boolean().default(true),
-  equipment: z.array(z.string()),
-  images: z.array(z.string()),
+  equipements: z.array(z.number()).optional(),
+  images: z.array(z.string()).optional(),
 });
 export type Room = z.infer<typeof roomSchema>;
