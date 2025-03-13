@@ -1,22 +1,15 @@
 import { z } from "zod";
 
-
 export const roomSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters long." }),
-  address: z
-    .string()
-    .min(3, { message: "Address must be at least 3 characters long." }),
-  region: z
-    .string()
-    .min(1, { message: "Region must be at least 3 characters long." }),
+  roomNumber: z.number().min(1, { message: "Room number must be a positive number." }),
+  type: z.string().min(1, { message: "Room type is required." }),
+  pricePerNight: z.number().min(0, { message: "Price must be a positive number." }),
+  status: z.string().min(1, { message: "Status is required." }),
+  capacity: z.number().min(1, { message: "Capacity must be at least 1." }),
+  hasBalcony: z.boolean().default(false),
+  isActive: z.boolean().default(true),
   description: z.string().optional(),
-  hasParking: z.boolean().default(false),
-  isPetFriendly: z.boolean().default(false),
-
-  rooms: z.array(z.coerce.number()).optional(),
-  images: z.array(z.string()).optional(),
+  
 });
 
-export type room = z.infer<typeof roomSchema>;
+export type Room = z.infer<typeof roomSchema>;

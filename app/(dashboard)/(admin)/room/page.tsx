@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
 import Items from "./_components/items";
-import { statusTypes } from "./create/_components/constants";
+import { RoomStatus } from "./create/_components/constants";
+
 
 const ITEMS_PER_PAGE = 10;
 
@@ -53,13 +54,13 @@ export default function Page() {
       </h1>
       <div className="flex items-center flex-col md:flex-row gap-2 w-full">
         <Search placeholder="Search by room number..." />
-        <FilterButton
+        {/* <FilterButton
           filterName="status"
-          options={statusTypes.map((type) => ({
+          options={RoomStatus.map((type) => ({
             id: type.value,
             label: type.label,
           }))}
-        />
+        /> */}
         <div className="flex flex-1 justify-end">
           <Button
             variant="primary"
@@ -114,8 +115,12 @@ export type Item = {
   capacity: number;
   hasBalcony: boolean;
   description?: string;
-  guestHouseId: number;
-  images: string[];
+ 
+
+  images: Array<{
+    id: number;
+    url: string;
+  }>;
   equipment: string[];
   isActive: boolean;
   createdAt: string;

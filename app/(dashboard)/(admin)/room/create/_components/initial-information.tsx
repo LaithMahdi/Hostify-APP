@@ -58,9 +58,9 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
             <SelectValue placeholder="Select room type" />
           </SelectTrigger>
           <SelectContent>
-            {roomTypes.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                {type.label}
+            {Object.values(roomTypes).map((type) => (
+              <SelectItem key={type} value={type}>
+                {type}
               </SelectItem>
             ))}
           </SelectContent>
@@ -94,9 +94,9 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
             <SelectValue placeholder="Select room statut" />
           </SelectTrigger>
           <SelectContent>
-            {statusTypes.map((status) => (
-              <SelectItem key={status.value} value={status.value}>
-                {status.label}
+            {Object.values(statusTypes).map((status) => (
+              <SelectItem key={status} value={status}>
+                {status}
               </SelectItem>
             ))}
           </SelectContent>

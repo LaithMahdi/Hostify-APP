@@ -17,7 +17,7 @@ const Page = () => {
       const response = await apiClient.get(`/room/${id}`);
       return response.data;
     },
-    enabled: !!id, // Empêche l'exécution de la requête si l'ID est inexistant
+    enabled: !!id, 
   });
 
   if (isFetching) {

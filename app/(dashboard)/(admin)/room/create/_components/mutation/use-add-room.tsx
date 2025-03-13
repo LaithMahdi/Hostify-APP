@@ -9,24 +9,30 @@ export function useAddRoom() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (values: z.infer<typeof roomSchema>) => {
-      return apiClient.post(`/room/create`, values);
+    mutationFn: async (values: z.infer<typeof roomSchema>) => {
+      try {
+        const response = await apiClient.post(`/room/create`, values);
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["rooms"],
       });
       toast({
-        title: "room created successfully",
+        title: "Room created successfully",
         variant: "success",
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({
         title: "Failed to create room",
+        description: error.response?.data?.message || "An unexpected error occurred",
         variant: "error",
       });
-      console.error("error:", error);
+      console.error("Error creating room:", error);
     },
   });
 }

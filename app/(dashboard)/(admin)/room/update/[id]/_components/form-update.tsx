@@ -1,9 +1,6 @@
 "use client";
-import BreadCrumbList from "@/components/shared/bread-crumb-list";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
-
-
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useParams } from "next/navigation";
@@ -15,14 +12,13 @@ import ImageSection from "./image-section";
 import { useUpdateRoom } from "./mutation/use-update-room";
 import { roomSchema } from "./schema";
 
-
-
-const Page = () => {
+const FormUpdate = () => {
   const { id } = useParams();
 
-  const { isFetching, data } = useQuery<DataType>({
+  // Fetch existing room data
+  const { isFetching, data } = useQuery({
     queryKey: ["room-by-id", id],
-    queryFn: () => apiClient.get(`/room/${id}`).then(res => res.data),
+    queryFn: () => apiClient.get(`/api/v1/room/${id}`).then((res) => res.data),
   });
 
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
@@ -30,7 +26,7 @@ const Page = () => {
 
   const item = data?.data;
 
-  const [formData, setFormData] = useState<Item>({
+  const [formData, setFormData] = useState({
     roomNumber: item?.roomNumber ?? 0,
     type: item?.type ?? "",
     pricePerNight: item?.pricePerNight ?? 0,
@@ -41,7 +37,6 @@ const Page = () => {
     description: item?.description ?? "",
     equipment: item?.equipment ?? [],
     images: item?.images ? item.images.map((image) => image.url) : [],
-
   });
 
   useEffect(() => {
@@ -57,7 +52,6 @@ const Page = () => {
         description: item.description,
         equipment: item.equipment,
         images: item?.images ? item.images.map((image) => image.url) : [],
-
       });
     }
   }, [item]);
@@ -71,44 +65,57 @@ const Page = () => {
     );
   };
 
+
   const handleFormChange = (key: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const result = roomSchema.safeParse(formData);
-
-    if (!result.success) {
-      setValidationErrors(result.error.issues);
-      return;
-    }
-
-    setLoading(true);
-    updateMutation.mutate(result.data, {
-      onSuccess: () => {
-        toast({ title: "Success", description: "room updated successfully" });
-        setLoading(false);
-      },
-      onError: () => {
-        toast({ title: "Error", description: "An error occurred", variant: "error" });
-        setLoading(false);
-      },
+    setFormData((prev) => {
+      const newFormData = { ...prev };
+      key.split(".").reduce((acc: any, key, index, array) => {
+        if (index === array.length - 1) {
+          acc[key] = value;
+        }
+        return acc[key];
+      }, newFormData);
+      console.log("newFormData", newFormData);
+      return newFormData;
     });
   };
 
-  if (isFetching) {
-    return <div>Loading...</div>;
-  }
-
+    const handle = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      const result = roomSchema.safeParse(formData);
+  
+      if (!result.success) {
+        setValidationErrors(result.error.issues);
+        return;
+      }
+  
+      setLoading(true);
+      try {
+        updateMutation.mutate(result.data);
+        toast({
+          title: "Success",
+          description: "room updated successfully",
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "An error occurred",
+          variant: "success",
+        });
+        setLoading(true);
+      }
+    };
+  
+    if (isFetching) {
+      return <div>Loading...</div>;
+    }
   return (
     <section className="flex flex-col items-start justify-start gap-2 w-full">
       <div className="flex flex-row gap-2 justify-between w-full">
-        <h1 className="text-3xl font-semibold mb-3">Update room</h1>
-        <Button onClick={handleSubmit} variant="primary" disabled={loading}>
+        <h1 className="text-3xl font-semibold mb-3">Update Room</h1>
+        <Button onClick={handle} variant="primary" disabled={loading}>
           {loading ? "Updating..." : "Update"}
         </Button>
       </div>
@@ -148,23 +155,4 @@ const Page = () => {
   );
 };
 
-export default Page;
-
-export type DataType = {
-  data: Item;
-};
-
-export type Item = {
-  id: number;
-  roomNumber: number;
-  type: string;
-  description: string;
-  pricePerNight: number;
-  status: string;
-  hasBalcony: boolean;
-  isActive: boolean;
-  capacity: number;
-  equipment: Array<{ id: number }>;
-  images: Array<{ id: number; url: string }>;
-  createdAt: string;
-};
+export default FormUpdate;
