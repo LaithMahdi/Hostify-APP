@@ -34,10 +34,10 @@ const ImageSection = ({ formData, errors, updateForm }: Props) => {
   const addImage = () => {
     const newImages = [...images, ""];
     setImages(newImages);
-    updateForm(
-      "images",
-      newImages.filter((url) => url !== "")
-    );
+    // updateForm(
+    //   "images",
+    //   newImages.filter((url) => url !== "")
+    // );
   };
 
   const updateImages = (index: number, url: string) => {

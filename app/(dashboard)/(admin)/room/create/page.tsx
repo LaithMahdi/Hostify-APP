@@ -9,8 +9,10 @@ import InitialInformation from "./_components/initial-information";
 import { toast } from "@/hooks/use-toast";
 import { useAddRoom } from "./_components/mutation/use-add-room";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const page = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
   const [formData, setFormData] = useState<Room>({
@@ -22,7 +24,7 @@ const page = () => {
     capacity: 1,
     hasBalcony: false,
     isActive: true,
-    equipment: [],
+    equipements: [],
     images: [],
   });
 
@@ -65,6 +67,7 @@ const page = () => {
         description: "Guest house created successfully",
       });
       handleReset();
+      router.push("/room");
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -87,7 +90,7 @@ const page = () => {
       capacity: 1,
       hasBalcony: false,
       isActive: true,
-      equipment: [],
+      equipements: [],
       images: [],
     });
     setValidationErrors([]);

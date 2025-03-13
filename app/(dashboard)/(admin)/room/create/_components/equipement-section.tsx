@@ -36,8 +36,8 @@ const EquipmentSection = ({ formData, errors, updateForm }: Props) => {
 
     setIds(newIds);
     updateForm(
-      "equipments",
-      newIds.map((id) => ({ id }))
+      "equipements",
+      newIds.map((id) => id)
     );
   };
 
