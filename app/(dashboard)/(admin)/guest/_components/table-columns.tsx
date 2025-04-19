@@ -91,7 +91,7 @@ export const columns: ColumnDef<Item>[] = [
     accessorKey: "gender",
     header: ({ column }) => (
       <div className="text-base">
-        Icon
+        Gender
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         ></button>
