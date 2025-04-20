@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectFade } from "swiper/modules";
+import { Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css/effect-fade";
 import "swiper/css";
 import { sliderData } from "./constants";
@@ -7,7 +7,7 @@ import { sliderData } from "./constants";
 const HeroSlider = () => {
   return (
     <Swiper
-      modules={[EffectFade]}
+      modules={[EffectFade, Autoplay]}
       effect={"fade"}
       loop={true}
       autoplay={{
