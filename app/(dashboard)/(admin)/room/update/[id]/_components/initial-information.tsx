@@ -3,11 +3,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { roomTypes, statusTypes } from "./type";
-
-
-
 
 interface Room {
   roomNumber: string;
@@ -41,31 +44,41 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="roomNumber">Room Number<span className="text-red-500">*</span></Label>
+        <Label htmlFor="roomNumber">
+          Room Number<span className="text-red-500">*</span>
+        </Label>
         <Input
           id="roomNumber"
           value={formData.roomNumber}
+          type="number"
           onChange={(e) => updateForm("roomNumber", e.target.value)}
           placeholder="Enter the room number"
           className="rounded-lg py-2 shadow-none"
         />
-        {getErrorMessage("roomNumber") && <p className="text-red-500">{getErrorMessage("roomNumber")}</p>}
+        {getErrorMessage("roomNumber") && (
+          <p className="text-red-500">{getErrorMessage("roomNumber")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="type">Type<span className="text-red-500">*</span></Label>
+        <Label htmlFor="type">
+          Type<span className="text-red-500">*</span>
+        </Label>
         <Select onValueChange={(value) => updateForm("type", value)}>
           <SelectTrigger className="rounded-lg py-2 shadow-none">
             <SelectValue placeholder="Select room type" />
           </SelectTrigger>
           <SelectContent>
             {Object.values(roomTypes).map((type) => (
-              <SelectItem key={type} value={type}>{type}</SelectItem>
+              <SelectItem key={type} value={type}>
+                {type}
+              </SelectItem>
             ))}
           </SelectContent>
-
         </Select>
-        {getErrorMessage("type") && <p className="text-red-500">{getErrorMessage("type")}</p>}
+        {getErrorMessage("type") && (
+          <p className="text-red-500">{getErrorMessage("type")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -81,19 +94,24 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="status">Status<span className="text-red-500">*</span></Label>
+        <Label htmlFor="status">
+          Status<span className="text-red-500">*</span>
+        </Label>
         <Select onValueChange={(value) => updateForm("status", value)}>
           <SelectTrigger className="rounded-lg py-2 shadow-none">
             <SelectValue placeholder="Select room status" />
           </SelectTrigger>
           <SelectContent>
             {Object.values(statusTypes).map((status) => (
-              <SelectItem key={status} value={status}>{status}</SelectItem>
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
             ))}
           </SelectContent>
-
         </Select>
-        {getErrorMessage("status") && <p className="text-red-500">{getErrorMessage("status")}</p>}
+        {getErrorMessage("status") && (
+          <p className="text-red-500">{getErrorMessage("status")}</p>
+        )}
       </div>
 
       <div className="space-y-2">

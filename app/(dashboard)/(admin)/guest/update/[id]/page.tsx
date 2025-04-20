@@ -1,4 +1,5 @@
 "use client";
+
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
 import { useParams } from "next/navigation";
 import apiClient from "@/lib/api-client";
@@ -6,18 +7,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Item } from "../../page";
 import FormUpdate from "./_components/form-update";
 
-const Page = () => {
-  const params = useParams();
-  const id = params?.id as string;
+const page = () => {
+  const { id } = useParams();
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: ["room-by-id", id],
-    queryFn: async () => {
-      if (!id) throw new Error("Room ID is missing");
-      const response = await apiClient.get(`/room/${id}`);
-      return response.data;
-    },
-    enabled: !!id,
+    queryKey: ["guest-by-id", id],
+    queryFn: () => apiClient.get(`/client/${id}`),
   });
 
   if (isFetching) {
@@ -29,18 +24,23 @@ const Page = () => {
       <BreadCrumbList
         breadCrumbs={[
           { label: "Dashboard", href: "/" },
-          { label: "Rooms", href: "/rooms" },
-          { label: "Update", href: "/rooms/update" },
-          { label: `${id}`, href: `/rooms/update/${id}` },
+          { label: "Guest", href: "/guest" },
+          { label: "Update", href: "/guest/update" },
+          { label: `${id}`, href: `/guest/update/${id}` },
         ]}
       />
-      {data && <FormUpdate item={data.data} />}
+
+      <h1 className="text-3xl font-semibold mb-3">Update Guest</h1>
+
+      {data && <FormUpdate item={data.data.data} />}
     </section>
   );
 };
 
-export default Page;
+export default page;
 
 export type DataType = {
-  data: Item;
+  data: {
+    data: Item;
+  };
 };

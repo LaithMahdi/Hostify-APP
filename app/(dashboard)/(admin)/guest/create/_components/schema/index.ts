@@ -47,7 +47,10 @@ export const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   phone: z.string().min(1, { message: "Phone number is required." }),
   gender: z.nativeEnum(Gender).default(Gender.MALE),
-  age: z.coerce.number().min(1, { message: "Age is required." }),
+  age: z
+    .string()
+    .refine((v) => parseInt(v))
+    .default("18"),
   relationship: z.nativeEnum(Relationship).default(Relationship.OTHER),
   members: z.array(
     z.object({

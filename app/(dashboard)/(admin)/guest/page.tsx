@@ -107,4 +107,11 @@ export type Item = {
   gender: string;
   age: number;
   createdAt: string;
+  membre: Array<{
+    id: number;
+    fullName: string;
+    gender: string;
+    relationship: string;
+    isManier: boolean;
+  }>;
 };

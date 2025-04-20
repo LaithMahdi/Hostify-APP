@@ -21,20 +21,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useUpdateGuest } from "./mutation/use-update-guest";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Plus, Trash } from "lucide-react";
+import { Item } from "../../../page";
 import {
   formSchema,
   Gender,
   genderList,
   Relationship,
   relationshipsList,
-} from "./schema";
-import { useAddGuest } from "./mutation/use-add-guest";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
-import AddDialog from "./add-dialog";
-import { Plus, Trash } from "lucide-react";
+} from "../../../create/_components/schema";
+import UpdateDialog from "./update-dialog";
 
-const FormCreate = () => {
+interface Props {
+  item: Item;
+}
+
+const FormUpdate = ({ item }: Props) => {
   const [gender, setGender] = useState<Gender>(Gender.MALE);
   const [loading, setLoading] = useState<boolean>(false);
   const [members, setMembers] = useState<
@@ -44,24 +49,39 @@ const FormCreate = () => {
       gender: Gender;
       relationship: Relationship;
     }[]
-  >([]);
+  >([
+    ...item.membre.map((e) => ({
+      fullName: e.fullName,
+      isManier: e.isManier,
+      gender: e.gender as Gender,
+      relationship: e.relationship as Relationship,
+    })),
+  ]);
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const { toast } = useToast();
-  const addGuest = useAddGuest();
+  const updateGuest = useUpdateGuest(item.id);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      cin: "0",
-      numPassport: "0",
-      fullName: "",
-      email: "",
-      phone: "",
-      age: "0",
-      gender: Gender.MALE,
-      relationship: Relationship.OTHER,
-      members: [],
+      cin: item.cin.toString() ?? "0",
+      numPassport: item.numPassport.toString() ?? "0",
+      fullName: item.fullName ?? "",
+      email: item.email ?? "",
+      phone: item.phone.toString() ?? "",
+      age: item.age.toString() ?? "0",
+      gender: item.gender === "MALE" ? Gender.MALE : Gender.FEMALE,
+      relationship:
+        item.membre[0]?.relationship === "SPOUSE"
+          ? Relationship.SPOUSE
+          : Relationship.OTHER,
+      members: item.membre.map((e) => ({
+        fullName: e.fullName,
+        isManier: e.isManier,
+        gender: e.gender as Gender,
+        relationship: e.relationship as Relationship,
+      })),
     },
     mode: "onChange",
   });
@@ -69,7 +89,7 @@ const FormCreate = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      addGuest.mutate({
+      updateGuest.mutate({
         ...values,
         cin: values.cin.toString(),
         numPassport: values.numPassport.toString(),
@@ -77,7 +97,7 @@ const FormCreate = () => {
       });
       toast({
         title: "Succés",
-        description: "Guest created successfully",
+        description: "Guest updated successfully",
         variant: "success",
       });
       handleReset();
@@ -107,7 +127,6 @@ const FormCreate = () => {
 
   return (
     <>
-      {" "}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -201,7 +220,6 @@ const FormCreate = () => {
                 ))}
               </div>
             </div>
-
             <FormField
               control={form.control}
               name="relationship"
@@ -339,7 +357,7 @@ const FormCreate = () => {
           </div>
         </form>
       </Form>
-      <AddDialog
+      <UpdateDialog
         open={open}
         onOpenChange={setOpen}
         members={members}
@@ -349,4 +367,4 @@ const FormCreate = () => {
   );
 };
 
-export default FormCreate;
+export default FormUpdate;

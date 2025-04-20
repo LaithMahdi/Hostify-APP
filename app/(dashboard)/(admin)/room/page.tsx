@@ -5,13 +5,10 @@ import apiClient from "@/lib/api-client";
 
 import Search from "./_components/search";
 import { useRouter, useSearchParams } from "next/navigation";
-import FilterButton from "@/components/shared/filter-button";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
 import Items from "./_components/items";
-import { RoomStatus } from "./create/_components/constants";
-
 
 const ITEMS_PER_PAGE = 10;
 
@@ -115,7 +112,6 @@ export type Item = {
   capacity: number;
   hasBalcony: boolean;
   description?: string;
- 
 
   images: Array<{
     id: number;

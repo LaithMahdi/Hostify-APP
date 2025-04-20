@@ -8,7 +8,6 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Gender, genderList, Relationship, relationshipsList } from "./schema";
 import {
   Form,
   FormControl,
@@ -30,6 +29,12 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import {
+  Gender,
+  genderList,
+  Relationship,
+  relationshipsList,
+} from "../../../create/_components/schema";
 
 interface Props {
   open: boolean;
@@ -59,7 +64,7 @@ const formSchema = z.object({
   isManier: z.boolean().default(false),
 });
 
-const AddDialog = ({ open, onOpenChange, members, setMembers }: Props) => {
+const UpdateDialog = ({ open, onOpenChange, members, setMembers }: Props) => {
   const [gender, setGender] = useState<Gender>(Gender.MALE);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -209,4 +214,4 @@ const AddDialog = ({ open, onOpenChange, members, setMembers }: Props) => {
   );
 };
 
-export default AddDialog;
+export default UpdateDialog;

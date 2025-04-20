@@ -4,30 +4,25 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import apiClient from "@/lib/api-client";
 import InitialInformation from "./initial-information";
 import EquipmentSection from "./equipement-section";
 import ImageSection from "./image-section";
 import { useUpdateRoom } from "./mutation/use-update-room";
 import { roomSchema } from "./schema";
+import { Item } from "../../../page";
 
-const FormUpdate = () => {
+interface Props {
+  item: Item;
+}
+
+const FormUpdate = ({ item }: Props) => {
   const { id } = useParams();
-
-  // Fetch existing room data
-  const { isFetching, data } = useQuery({
-    queryKey: ["room-by-id", id],
-    queryFn: () => apiClient.get(`/api/v1/room/${id}`).then((res) => res.data),
-  });
 
   const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const item = data?.data;
-
   const [formData, setFormData] = useState({
-    roomNumber: item?.roomNumber ?? 0,
+    roomNumber: item?.roomNumber?.toString() ?? "0",
     type: item?.type ?? "",
     pricePerNight: item?.pricePerNight ?? 0,
     status: item?.status ?? "",
@@ -36,22 +31,26 @@ const FormUpdate = () => {
     isActive: item?.isActive ?? false,
     description: item?.description ?? "",
     equipment: item?.equipment ?? [],
-    images: item?.images ? item.images.map((image) => image.url) : [],
+    images: item?.images
+      ? item.images.map((image: { url: string }) => image.url)
+      : [],
   });
 
   useEffect(() => {
     if (item) {
       setFormData({
-        roomNumber: item.roomNumber,
+        roomNumber: item.roomNumber.toString(),
         type: item.type,
         pricePerNight: item.pricePerNight,
         status: item.status,
         capacity: item.capacity,
         hasBalcony: item.hasBalcony,
         isActive: item.isActive,
-        description: item.description,
+        description: item.description ?? "",
         equipment: item.equipment,
-        images: item?.images ? item.images.map((image) => image.url) : [],
+        images: item?.images
+          ? item.images.map((image: { url: string }) => image.url)
+          : [],
       });
     }
   }, [item]);
@@ -64,7 +63,6 @@ const FormUpdate = () => {
       fieldArray.includes(String(error.path[0]))
     );
   };
-
 
   const handleFormChange = (key: string, value: any) => {
     setFormData((prev) => {
@@ -80,37 +78,34 @@ const FormUpdate = () => {
     });
   };
 
-    const handle = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      const result = roomSchema.safeParse(formData);
-  
-      if (!result.success) {
-        setValidationErrors(result.error.issues);
-        return;
-      }
-  
-      setLoading(true);
-      try {
-        updateMutation.mutate(result.data);
-        toast({
-          title: "Success",
-          description: "room updated successfully",
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: "Error",
-          description: "An error occurred",
-          variant: "success",
-        });
-        setLoading(true);
-      }
-    };
-  
-    if (isFetching) {
-      return <div>Loading...</div>;
+  const handle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const result = roomSchema.safeParse(formData);
+
+    if (!result.success) {
+      setValidationErrors(result.error.issues);
+      return;
     }
+
+    setLoading(true);
+    try {
+      updateMutation.mutate(result.data);
+      toast({
+        title: "Success",
+        description: "room updated successfully",
+      });
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "An error occurred",
+        variant: "success",
+      });
+      setLoading(true);
+    }
+  };
+
   return (
     <section className="flex flex-col items-start justify-start gap-2 w-full">
       <div className="flex flex-row gap-2 justify-between w-full">

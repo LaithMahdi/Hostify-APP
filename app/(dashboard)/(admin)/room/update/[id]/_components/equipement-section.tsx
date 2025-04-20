@@ -3,7 +3,6 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/lib/api-client";
-import { CheckCircle } from "lucide-react";
 
 interface Props {
   formData: any;
@@ -15,13 +14,13 @@ const EquipmentSection = ({ formData, errors, updateForm }: Props) => {
   const { data } = useQuery<DataType>({
     queryKey: ["equipment-list"],
     queryFn: async () => {
-      const response = await apiClient.get(`/equipment/all`);
+      const response = await apiClient.get(`equipment/all`);
       return response.data;
     },
   });
 
   const [ids, setIds] = useState<number[]>(
-    formData.equipments?.map((equipment: { id: number }) => equipment.id) || []
+    formData.equipment?.map((equipment: { id: number }) => equipment.id) || []
   );
 
   const getErrorMessage = (field: string) => {
@@ -41,6 +40,10 @@ const EquipmentSection = ({ formData, errors, updateForm }: Props) => {
     );
   };
 
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col space-y-3 p-4 border rounded-lg w-full">
       <div className="flex flex-col space-y-1">
@@ -55,22 +58,23 @@ const EquipmentSection = ({ formData, errors, updateForm }: Props) => {
           <span className="text-base font-semibold text-red-500">*</span>
         </Label>
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {data?.data?.map((equipment) => (
           <div
             key={equipment.id}
-            className={`flex flex-row items-center space-x-4 p-4 border rounded-lg cursor-pointer ${
-              ids.includes(equipment.id) ? "bg-blue-50 border-blue-500" : ""
+            className={`flex flex-row items-center space-x-4 px-4 py-2 border rounded-lg cursor-pointer ${
+              ids.includes(equipment.id) && "bg-blue-50 border-blue-500"
             }`}
             onClick={() => updateEquipments(equipment.id)}
           >
-            <CheckCircle className="size-10 text-mainColor" />
-            <div>
-              <p className="text-lg font-semibold">{equipment.name}</p>
-              <p className="text-sm font-normal text-neutral-500">
-                {equipment.description}
-              </p>
-            </div>
+            <img
+              src={equipment.icon}
+              alt={equipment.name}
+              className="size-10 rounded-xl bg-cover bg-center"
+            />
+            <p className="text-xs font-semibold line-clamp-1">
+              {equipment.name}
+            </p>
           </div>
         ))}
       </div>

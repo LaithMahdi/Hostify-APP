@@ -19,7 +19,7 @@ const ActionsButtons = ({ data }: Props) => {
         variant="outline"
         size="sm"
         className="!p-2"
-        onClick={() => router.push(`/equipment/update/${data.id}`)}
+        onClick={() => router.push(`/guest/update/${data.id}`)}
       >
         <PencilIcon />
       </Button>

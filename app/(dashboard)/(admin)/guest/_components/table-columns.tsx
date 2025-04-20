@@ -43,19 +43,6 @@ export const columns: ColumnDef<Item>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <div className="text-base">
-        ID
-        <button
-          className="ml-2"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        ></button>
-      </div>
-    ),
-    cell: ({ row }) => <p className="text-sm">{row.original.id}</p>,
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => (
       <div className="text-base">
@@ -86,7 +73,21 @@ export const columns: ColumnDef<Item>[] = [
       return <div className="text-sm">{row.original.cin}</div>;
     },
   },
-
+  {
+    accessorKey: "email",
+    header: ({ column }) => (
+      <div className="text-base">
+        E-mail
+        <button
+          className="ml-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        ></button>
+      </div>
+    ),
+    cell: ({ row }) => {
+      return <div className="text-sm">{row.original.email}</div>;
+    },
+  },
   {
     accessorKey: "gender",
     header: ({ column }) => (
