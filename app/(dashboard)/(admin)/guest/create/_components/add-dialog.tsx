@@ -71,7 +71,12 @@ const AddDialog = ({ open, onOpenChange, members, setMembers }: Props) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {}
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    setMembers((prev) => [...prev, values]);
+    form.reset();
+    setGender(Gender.MALE);
+    onOpenChange(false);
+  }
 
   const handleSelectGender = (e: Gender) => {
     setGender(e);
@@ -81,6 +86,7 @@ const AddDialog = ({ open, onOpenChange, members, setMembers }: Props) => {
   const handleReset = () => {
     form.reset();
     setGender(Gender.MALE);
+    onOpenChange(false);
   };
 
   return (

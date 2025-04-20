@@ -2,7 +2,7 @@ import { Mars, Venus } from "lucide-react";
 import { z } from "zod";
 
 export enum Gender {
-  MALE = "MAlE",
+  MALE = "MALE",
   FEMALE = "FEMALE",
 }
 
@@ -37,8 +37,8 @@ export const formSchema = z.object({
     .string()
     .min(1, { message: "CIN is required." })
     .max(8, { message: "CIN must be 8 digits." })
-    .transform((v) => parseInt(v)),
-  numPassport: z.string().transform((v) => parseInt(v)),
+    .refine((v) => parseInt(v)),
+  numPassport: z.string().refine((v) => parseInt(v)),
   fullName: z.string().min(1, { message: "Full name is required." }),
   email: z.string().email({ message: "Invalid email address." }),
   phone: z.string().min(1, { message: "Phone number is required." }),

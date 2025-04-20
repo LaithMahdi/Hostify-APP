@@ -10,7 +10,7 @@ export function useAddGuest() {
 
   return useMutation({
     mutationFn: (values: z.infer<typeof formSchema>) => {
-      return apiClient.post(`/guest/create`, values);
+      return apiClient.post(`/client/create`, values);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

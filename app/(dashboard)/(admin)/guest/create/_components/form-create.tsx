@@ -19,7 +19,7 @@ import { useAddGuest } from "./mutation/use-add-guest";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import AddDialog from "./add-dialog";
-import { Plus } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
 
 const FormCreate = () => {
   const [gender, setGender] = useState<Gender>(Gender.MALE);
@@ -35,13 +35,13 @@ const FormCreate = () => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const { toast } = useToast();
-  const addEquipment = useAddGuest();
+  const addGuest = useAddGuest();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      cin: 0,
-      numPassport: 0,
+      cin: "0",
+      numPassport: "0",
       fullName: "",
       email: "",
       phone: "",
@@ -50,12 +50,18 @@ const FormCreate = () => {
       relationship: Relationship.OTHER,
       members: [],
     },
+    mode: "onChange",
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      addEquipment.mutate(values);
+      addGuest.mutate({
+        ...values,
+        cin: values.cin.toString(),
+        numPassport: values.numPassport.toString(),
+        members,
+      });
       toast({
         title: "Succés",
         description: "Guest created successfully",
@@ -71,7 +77,7 @@ const FormCreate = () => {
         description: "An error occurred",
         variant: "error",
       });
-      setLoading(true);
+      setLoading(false);
     }
   }
 
@@ -83,6 +89,7 @@ const FormCreate = () => {
   const handleReset = () => {
     form.reset();
     setGender(Gender.MALE);
+    setMembers([]);
   };
 
   return (
@@ -111,7 +118,7 @@ const FormCreate = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>FullName</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g Johndoe@mail.com" {...field} />
                 </FormControl>
@@ -130,8 +137,7 @@ const FormCreate = () => {
                   <Input
                     placeholder="e.g 123456789"
                     {...field}
-                    minLength={6}
-                    maxLength={8}
+                    min={6}
                     type="number"
                   />
                 </FormControl>
@@ -153,8 +159,7 @@ const FormCreate = () => {
                   <Input
                     placeholder="e.g 123456789"
                     {...field}
-                    minLength={6}
-                    maxLength={8}
+                    min={6}
                     type="number"
                   />
                 </FormControl>
@@ -190,8 +195,7 @@ const FormCreate = () => {
                   <Input
                     placeholder="e.g 123456789"
                     {...field}
-                    minLength={6}
-                    maxLength={8}
+                    min={6}
                     type="number"
                   />
                 </FormControl>
@@ -207,13 +211,7 @@ const FormCreate = () => {
               <FormItem>
                 <FormLabel>Age</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="e.g 1"
-                    {...field}
-                    minLength={1}
-                    maxLength={2}
-                    type="number"
-                  />
+                  <Input placeholder="e.g 1" {...field} min={1} type="number" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -233,6 +231,45 @@ const FormCreate = () => {
             >
               <Plus className="text-white" />
             </Button>
+          </div>
+          <div className="flex flex-col gap-3">
+            {members.length > 0 ? (
+              members.map((e, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between rounded-lg border p-3 shadow-sm"
+                >
+                  <div className="space-y-0.5">
+                    <p className="font-medium text-lg">
+                      {e.fullName}
+
+                      <span className="ms-1 text-sm text-gray-500">
+                        ({e.gender})
+                      </span>
+                    </p>
+                    <p className="text-gray-500 text-sm">{e.relationship}</p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <button
+                      type="button"
+                      className="text-red-500 hover:text-red-600 transition-all duration-200 ease-in-out"
+                      onClick={() => {
+                        const newMembers = members.filter(
+                          (_, index) => index !== i
+                        );
+                        setMembers(newMembers);
+                      }}
+                    >
+                      <Trash className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-sm">
+                No members added yet. Click on the plus button to add members.
+              </p>
+            )}
           </div>
         </div>
 
