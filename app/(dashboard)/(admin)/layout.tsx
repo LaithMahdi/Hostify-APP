@@ -4,7 +4,7 @@ import Sidebar from "@/components/ui/components/sidebar";
 interface Props {
   children: React.ReactNode;
 }
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+const DashboardLayout = ({ children }: Props) => {
   return (
     <div className="h-full">
       <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50">
