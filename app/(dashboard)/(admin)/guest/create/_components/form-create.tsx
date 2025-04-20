@@ -18,12 +18,22 @@ import { formSchema, Gender, genderList, Relationship } from "./schema";
 import { useAddGuest } from "./mutation/use-add-guest";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import AddDialog from "./add-dialog";
+import { Plus } from "lucide-react";
 
 const FormCreate = () => {
   const [gender, setGender] = useState<Gender>(Gender.MALE);
   const [loading, setLoading] = useState<boolean>(false);
+  const [members, setMembers] = useState<
+    {
+      fullName: string;
+      isManier: boolean;
+      gender: Gender;
+      relationship: Relationship;
+    }[]
+  >([]);
+  const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
-
   const { toast } = useToast();
   const addEquipment = useAddGuest();
 
@@ -211,7 +221,20 @@ const FormCreate = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-3"></div>
+        <div className="flex flex-col gap-3">
+          <div className="flex justify-between">
+            <h1 className="text-xl font-semibold">Members</h1>
+            <Button
+              type="button"
+              onClick={() => setOpen(true)}
+              size="sm"
+              variant="primary"
+              className="!w-10 !h-10 p-0 rounded-full "
+            >
+              <Plus className="text-white" />
+            </Button>
+          </div>
+        </div>
 
         <div className="flex flex-row gap-2">
           <Button
@@ -226,6 +249,12 @@ const FormCreate = () => {
             Submit
           </Button>
         </div>
+        <AddDialog
+          open={open}
+          onOpenChange={setOpen}
+          members={members}
+          setMembers={setMembers}
+        />
       </form>
     </Form>
   );
