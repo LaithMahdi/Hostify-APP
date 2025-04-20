@@ -8,8 +8,8 @@ import InitialInformation from "./initial-information";
 import EquipmentSection from "./equipement-section";
 import ImageSection from "./image-section";
 import { useUpdateRoom } from "./mutation/use-update-room";
-import { roomSchema } from "./schema";
 import { Item } from "../../../page";
+import { roomSchema } from "../../../create/_components/schema";
 
 interface Props {
   item: Item;
@@ -22,7 +22,7 @@ const FormUpdate = ({ item }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
-    roomNumber: item?.roomNumber?.toString() ?? "0",
+    roomNumber: item?.roomNumber ?? 0,
     type: item?.type ?? "",
     pricePerNight: item?.pricePerNight ?? 0,
     status: item?.status ?? "",
@@ -39,7 +39,7 @@ const FormUpdate = ({ item }: Props) => {
   useEffect(() => {
     if (item) {
       setFormData({
-        roomNumber: item.roomNumber.toString(),
+        roomNumber: item.roomNumber,
         type: item.type,
         pricePerNight: item.pricePerNight,
         status: item.status,
@@ -89,7 +89,10 @@ const FormUpdate = ({ item }: Props) => {
 
     setLoading(true);
     try {
-      updateMutation.mutate(result.data);
+      updateMutation.mutate({
+        ...result.data,
+        roomNumber: Number(result.data.roomNumber),
+      });
       toast({
         title: "Success",
         description: "room updated successfully",
@@ -135,7 +138,7 @@ const FormUpdate = ({ item }: Props) => {
           <EquipmentSection
             formData={formData}
             updateForm={handleFormChange}
-            errors={getErrorsForSection(["equipment"])}
+            errors={getErrorsForSection(["equipements"])}
           />
         </div>
         <div className="md:col-span-8">

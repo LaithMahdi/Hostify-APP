@@ -35,8 +35,8 @@ const EquipmentSection = ({ formData, errors, updateForm }: Props) => {
 
     setIds(newIds);
     updateForm(
-      "equipments",
-      newIds.map((equipId) => ({ id: equipId }))
+      "equipements",
+      newIds.map((equipId) => equipId)
     );
   };
 
@@ -78,8 +78,8 @@ const EquipmentSection = ({ formData, errors, updateForm }: Props) => {
           </div>
         ))}
       </div>
-      {getErrorMessage("equipments") && (
-        <p className="text-red-500 text-sm">{getErrorMessage("equipments")}</p>
+      {getErrorMessage("equipements") && (
+        <p className="text-red-500 text-sm">{getErrorMessage("equipements")}</p>
       )}
     </div>
   );

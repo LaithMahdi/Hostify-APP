@@ -13,7 +13,7 @@ import {
 import { roomTypes, statusTypes } from "./type";
 
 interface Room {
-  roomNumber: string;
+  roomNumber: number;
   type: string;
   pricePerNight: number;
   status: string;
@@ -49,10 +49,10 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
         </Label>
         <Input
           id="roomNumber"
-          value={formData.roomNumber}
           type="number"
-          onChange={(e) => updateForm("roomNumber", e.target.value)}
-          placeholder="Enter the room number"
+          value={formData.roomNumber}
+          onChange={(e) => updateForm("roomNumber", Number(e.target.value))}
+          placeholder="Enter price per night"
           className="rounded-lg py-2 shadow-none"
         />
         {getErrorMessage("roomNumber") && (
@@ -91,15 +91,18 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           placeholder="Enter price per night"
           className="rounded-lg py-2 shadow-none"
         />
+        {getErrorMessage("pricePerNight") && (
+          <p className="text-red-500">{getErrorMessage("pricePerNight")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="status">
-          Status<span className="text-red-500">*</span>
+          status<span className="text-red-500">*</span>
         </Label>
         <Select onValueChange={(value) => updateForm("status", value)}>
           <SelectTrigger className="rounded-lg py-2 shadow-none">
-            <SelectValue placeholder="Select room status" />
+            <SelectValue placeholder="Select room statut" />
           </SelectTrigger>
           <SelectContent>
             {Object.values(statusTypes).map((status) => (
@@ -124,6 +127,9 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           placeholder="Enter the room capacity"
           className="rounded-lg py-2 shadow-none"
         />
+        {getErrorMessage("capacity") && (
+          <p className="text-red-500">{getErrorMessage("capacity")}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -135,10 +141,21 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
           placeholder="Enter a description of the room"
           className="rounded-lg py-2 shadow-none"
         />
+        {getErrorMessage("description") && (
+          <p className="text-red-500">{getErrorMessage("description")}</p>
+        )}
       </div>
 
       <div className="flex justify-between items-center border py-2 px-4 rounded-lg">
-        <Label htmlFor="hasBalcony">Has Balcony</Label>
+        <div className="space-y-1">
+          <Label htmlFor="hasBalcony" className="text-slate-900 font-normal">
+            Has Balcony
+          </Label>
+          <p className="text-xs text-slate-500">
+            Check this if the room has a balcony. This will be displayed on the
+            room details page.
+          </p>
+        </div>
         <Switch
           checked={formData.hasBalcony}
           onCheckedChange={(value) => updateForm("hasBalcony", value)}
@@ -146,7 +163,15 @@ const InitialInformation = ({ formData, errors, updateForm }: Props) => {
       </div>
 
       <div className="flex justify-between items-center border py-2 px-4 rounded-lg">
-        <Label htmlFor="isActive">Active</Label>
+        <div className="space-y-1">
+          <Label htmlFor="isActive" className="text-slate-900 font-normal">
+            Is Active
+          </Label>
+          <p className="text-xs text-slate-500">
+            Check this if the room is active. This will be displayed on the room
+            details page.
+          </p>
+        </div>
         <Switch
           checked={formData.isActive}
           onCheckedChange={(value) => updateForm("isActive", value)}
