@@ -38,7 +38,11 @@ export const formSchema = z.object({
     .min(1, { message: "CIN is required." })
     .max(8, { message: "CIN must be 8 digits." })
     .refine((v) => parseInt(v)),
-  numPassport: z.string().refine((v) => parseInt(v)),
+  numPassport: z
+    .string()
+    .refine((v) => parseInt(v))
+    .optional()
+    .default("0"),
   fullName: z.string().min(1, { message: "Full name is required." }),
   email: z.string().email({ message: "Invalid email address." }),
   phone: z.string().min(1, { message: "Phone number is required." }),

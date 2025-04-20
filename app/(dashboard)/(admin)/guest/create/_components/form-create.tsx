@@ -156,12 +156,7 @@ const FormCreate = () => {
                   <span className="text-gray-500">(optional)</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="e.g 123456789"
-                    {...field}
-                    min={6}
-                    type="number"
-                  />
+                  <Input placeholder="e.g 123456789" {...field} type="number" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
