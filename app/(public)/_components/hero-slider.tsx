@@ -1,6 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-// import { sliderData } from '../constants/data';
-import { EffectFade, Autoplay } from "swiper/modules";
+import { EffectFade } from "swiper/modules";
 import "swiper/css/effect-fade";
 import "swiper/css";
 import { sliderData } from "./constants";
@@ -8,21 +7,25 @@ import { sliderData } from "./constants";
 const HeroSlider = () => {
   return (
     <Swiper
-      modules={[EffectFade, Autoplay]}
+      modules={[EffectFade]}
       effect={"fade"}
       loop={true}
       autoplay={{
         delay: 3000,
         disableOnInteraction: false,
       }}
-      className="heroSlider h-[600px] lg:h-[860px]"
+      className="h-screen"
     >
       {sliderData.map(({ id, title, bg, btnNext }) => (
         <SwiperSlide
-          className="h-full relative flex justify-center items-center"
+          className="h-full relative flex justify-center items-center w-full"
           key={id}
         >
-          <div className="z-20 text-white text-center">
+          <div className="absolute top-0 bottom-0 right-0 left-0 w-full h-full">
+            <img className="object-cover h-full w-full" src={bg} alt="logo" />
+          </div>
+          <div className="absolute top-0 bottom-0 right-0 left-0 w-full h-full bg-black/70" />
+          <div className="z-50 text-white text-center flex items-center justify-center absolute top-0 bottom-0 right-0 left-0 w-full h-full flex-col">
             <div className="uppercase font-tertiary tracking-[6px] mb-5">
               Just Enjoy & Relax
             </div>
@@ -33,12 +36,6 @@ const HeroSlider = () => {
               {btnNext}
             </button>
           </div>
-
-          <div className="absolute top-0 w-full h-full">
-            <img className="object-cover h-full w-full" src={bg} alt="logo" />
-          </div>
-
-          <div className="absolute w-full h-full bg-black/70" />
         </SwiperSlide>
       ))}
     </Swiper>

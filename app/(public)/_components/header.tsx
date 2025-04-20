@@ -1,11 +1,11 @@
 "use client";
+
 import Logo from "@/components/svg/logo";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; // SVG Logo
 
 const Header = () => {
-  const [header, setHeader] = useState<boolean>(false);
+  const [header, setHeader] = useState(false);
 
   useEffect(() => {
     window.addEventListener("scroll", () =>
@@ -21,31 +21,22 @@ const Header = () => {
       ${header ? "bg-white py-6 shadow-lg" : "bg-transparent py-8"}`}
     >
       <div className="container mx-auto flex flex-col lg:flex-row items-center lg:justify-between gap-y-6 lg:gap-y-0">
+        {/* Logo */}
         <Link href="/">
-          <Logo className={cn("text-black", !header && "text-white")} />
+          <Logo />
         </Link>
 
+        {/* Nav */}
         <nav
-          className={cn(
-            "flex gap-x-4 lg:gap-x-8 font-medium tracking-[3px] text-[15px] items-center uppercase",
-            header ? "text-black" : "text-white"
-          )}
+          className={`${header ? "text-primary" : "text-white"}
+        flex gap-x-4 lg:gap-x-8 font-tertiary tracking-[3px] text-[15px] items-center uppercase`}
         >
           {navLinks.map((link) => (
-            <Link
-              href="/"
-              className={cn(
-                "transition hover:text-black/80",
-                !header && "hover:text-white/80"
-              )}
-              key={link}
-            >
+            <Link href="/" className="transition hover:text-accent" key={link}>
               {link}
             </Link>
           ))}
         </nav>
-
-        {/* <Button>Login</Button> */}
       </div>
     </header>
   );
