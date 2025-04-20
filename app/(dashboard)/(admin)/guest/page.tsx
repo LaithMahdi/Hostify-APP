@@ -20,11 +20,14 @@ export default function Page() {
   );
 
   const search = searchParams.get("search") || "";
+  const cin = searchParams.get("cin") || "";
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: ["guests", page, search],
+    queryKey: ["guests", page, search, cin],
     queryFn: () =>
-      apiClient.get(`/client/added-by?page=${page}&search=${search}`),
+      apiClient.get(
+        `/client/added-by?page=${page}&search=${search}&cin=${cin}`
+      ),
   });
 
   const totalItems = data?.data.totalItems ? data.data.totalItems : 0;
@@ -46,13 +49,13 @@ export default function Page() {
         </span>
       </h1>
       <div className="flex items-center flex-col md:flex-row gap-2 w-full">
-        <Search />
-        {/* <FilterButton filterName="isActive" options={options} /> */}
+        <Search placeholder="Search by name ..." />
+        <Search searchName="cin" placeholder="Search by cin ..." />
         <div className="flex flex-1 justify-end">
           <Button
             variant="primary"
             className="py-5"
-            onClick={() => router.push("/equipment/create")}
+            onClick={() => router.push("/guest/create")}
           >
             <Plus className="text-white" />
             Create

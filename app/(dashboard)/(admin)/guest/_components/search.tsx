@@ -3,7 +3,12 @@ import { useUpdateSearchParams } from "@/hooks/use-set-search-param";
 import { SearchIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export default function Search() {
+interface Props {
+  searchName?: string;
+  placeholder?: string;
+}
+
+export default function Search({ searchName, placeholder }: Props) {
   const [searchValue, setSearchValue] = useState("");
   const { setMultipleSearchParams, deleteSearchParam } =
     useUpdateSearchParams();
@@ -25,7 +30,7 @@ export default function Search() {
     if (debouncedValue) {
       setMultipleSearchParams([
         {
-          name: "search",
+          name: searchName ?? "search",
           value: debouncedValue,
         },
         {
@@ -34,7 +39,7 @@ export default function Search() {
         },
       ]);
     } else {
-      deleteSearchParam("search");
+      deleteSearchParam(searchName ?? "search");
     }
   }, [debouncedValue, setMultipleSearchParams, deleteSearchParam]);
 
@@ -45,7 +50,7 @@ export default function Search() {
         onChange={(e) => setSearchValue(e.target.value)}
         value={searchValue}
         type="text"
-        placeholder="Rechercher..."
+        placeholder={placeholder ?? "Search..."}
         className="pl-12 text-sm h-10 pr-12 placeholder:!font-medium border-opacity-50 rounded-lg border"
       />
     </form>

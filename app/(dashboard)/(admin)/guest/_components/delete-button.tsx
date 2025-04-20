@@ -25,26 +25,27 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => {
-      return apiClient.delete(`/equipment/delete/${data.id}`);
+      return apiClient.delete(`/client/delete/${data.id}`);
     },
     onSuccess: (data) => {
       if (data.data.success) {
         toast({
-          title: "Equipment deleted successfully",
+          title: "Guest deleted successfully",
+          variant: "success",
         });
-        queryClient.invalidateQueries({ queryKey: ["equipments"] });
+        queryClient.invalidateQueries({ queryKey: ["guests"] });
         onOpenChange(false);
       } else {
         toast({
-          title: "Failed to delete equipment",
-          variant: "success",
+          title: "Failed to delete guest",
+          variant: "error",
         });
         onOpenChange(false);
       }
     },
     onError: (error) => {
       toast({
-        title: "Failed to delete equipment",
+        title: "Failed to delete guest",
         variant: "error",
       });
       console.error("Failed", error);
@@ -58,7 +59,7 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete &nbsp;
-            {data.name} &nbsp;from the database.
+            {data.fullName} &nbsp;from the database.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
