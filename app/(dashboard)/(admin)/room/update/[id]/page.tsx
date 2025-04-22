@@ -29,8 +29,8 @@ const Page = () => {
       <BreadCrumbList
         breadCrumbs={[
           { label: "Dashboard", href: "/" },
-          { label: "Rooms", href: "/rooms" },
-          { label: "Update", href: "/rooms/update" },
+          { label: "Rooms", href: "/room" },
+          { label: "Update", href: "/room/update" },
           { label: `${id}`, href: `/rooms/update/${id}` },
         ]}
       />
