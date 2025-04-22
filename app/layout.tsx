@@ -30,7 +30,7 @@ export default function RootLayout({
           <QueryProvider>
             <Toaster />
             <NextTopLoader
-              color="#1968e6"
+              color="#a37d4c"
               initialPosition={0.08}
               crawlSpeed={200}
               height={5}

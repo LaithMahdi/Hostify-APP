@@ -12,7 +12,13 @@ interface JWTPayload {
 }
 
 // Configuration for protected routes
-const PROTECTED_ROUTES = ["/", "/management", "/rooms", "/equipment"];
+const PROTECTED_ROUTES = [
+  "/guest-house",
+  "/guest",
+  "/room",
+  "/equipment",
+  "/dashboard",
+];
 const ADMIN_ROUTES = ["/management", "/admin"];
 
 // Function to verify JWT token

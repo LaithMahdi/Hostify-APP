@@ -13,12 +13,12 @@ const RoomsSection = () => {
 
   if (isFetching)
     return (
-      <div className="grid grid-cols-1 max-w-sm mx-auto gap-[30px] lg:grid-cols-3 lg:max-w-none lg:mx-0">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <div className="bg-white shadow-2xl min-h-[530px] group" key={index}>
-            <Skeleton className="w-[100px] h-[20px] rounded-full" />
-          </div>
-        ))}
+      <div className="container mx-auto lg:px-0 mt-24">
+        <div className="grid grid-cols-1 max-w-sm mx-auto gap-[30px] lg:grid-cols-3 lg:max-w-none lg:mx-0">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton className="w-full min-h-[530px]  " key={index} />
+          ))}
+        </div>
       </div>
     );
 
