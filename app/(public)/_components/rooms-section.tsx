@@ -1,16 +1,26 @@
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 import RoomCard from "./room-card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 6;
 
 const RoomsSection = () => {
   const { isFetching, data } = useQuery<DataType>({
     queryKey: ["rooms"],
-    queryFn: () => apiClient.get(`/room/all`),
+    queryFn: () => apiClient.get(`/room/all?limit=${ITEMS_PER_PAGE}`),
   });
 
-  if (isFetching) return <>loading...</>;
+  if (isFetching)
+    return (
+      <div className="grid grid-cols-1 max-w-sm mx-auto gap-[30px] lg:grid-cols-3 lg:max-w-none lg:mx-0">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div className="bg-white shadow-2xl min-h-[530px] group" key={index}>
+            <Skeleton className="w-[100px] h-[20px] rounded-full" />
+          </div>
+        ))}
+      </div>
+    );
 
   return (
     <section className="py-24">
