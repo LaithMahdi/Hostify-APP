@@ -6,11 +6,11 @@ import RoomsSection from "./_components/rooms-section";
 
 const page = () => {
   return (
-    <div>
+    <>
       <HeroSlider />
       <GuestHouseSection />
       <RoomsSection />
-    </div>
+    </>
   );
 };
 

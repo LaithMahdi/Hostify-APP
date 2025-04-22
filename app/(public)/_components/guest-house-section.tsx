@@ -23,7 +23,7 @@ const GuestHouseSection = () => {
     );
 
   return (
-    <section className="py-24">
+    <section className="py-24" id="guest-house">
       <div className="container mx-auto lg:px-0">
         <div className="text-center">
           <p className="font-tertiary uppercase text-[15px] tracking-[6px]">

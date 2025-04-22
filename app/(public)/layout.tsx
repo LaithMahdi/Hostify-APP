@@ -6,11 +6,11 @@ interface Props {
 }
 const PublicLayout = ({ children }: Props) => {
   return (
-    <div className="h-full w-full">
+    <>
       <Header />
       <main>{children}</main>
       <Footer />
-    </div>
+    </>
   );
 };
 

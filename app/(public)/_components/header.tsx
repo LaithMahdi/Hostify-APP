@@ -3,18 +3,34 @@
 import Logo from "@/components/svg/logo";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Header = () => {
+  const pathname = usePathname();
   const [header, setHeader] = useState(false);
 
   useEffect(() => {
-    window.addEventListener("scroll", () =>
-      window.scrollY > 50 ? setHeader(true) : setHeader(false)
-    );
-  });
+    const handleScroll = () => {
+      if (window.scrollY > 50 || pathname !== "/") {
+        setHeader(true);
+      } else {
+        setHeader(false);
+      }
+    };
 
-  const navLinks = ["Home", "Guest Houses", "Rooms", "Contact"];
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [pathname]);
+  // "Home", "Guest Houses", "Rooms", "Contact"
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Guest Houses", href: "#guest-house" },
+    { label: "Rooms", href: "#room" },
+    { label: "Contact", href: "#contact" },
+  ];
 
   return (
     <header
@@ -36,14 +52,14 @@ const Header = () => {
         >
           {navLinks.map((link) => (
             <Link
-              href="/"
+              href={link.href}
               className={cn(
                 "transition",
                 header ? "hover:text-mainColor/80" : "hover:text-white/80"
               )}
-              key={link}
+              key={link.href}
             >
-              {link}
+              {link.label}
             </Link>
           ))}
         </nav>

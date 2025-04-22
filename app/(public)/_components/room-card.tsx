@@ -49,7 +49,7 @@ const Room = ({ room }: Props) => {
 
       {/* name and description */}
       <div className="text-center">
-        <Link href={`/room/${room.id}`}>
+        <Link href={`/room/detail/${room.id}`}>
           <h3 className="text-lg font-semibold text-slate-800">
             <span className="me-1">Room Number :</span>
             {room.roomNumber}
