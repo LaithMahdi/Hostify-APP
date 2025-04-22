@@ -3,6 +3,7 @@ import { Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css/effect-fade";
 import "swiper/css";
 import { sliderData } from "./constants";
+import { Button } from "@/components/ui/button";
 
 const HeroSlider = () => {
   return (
@@ -32,9 +33,9 @@ const HeroSlider = () => {
             <h1 className="font-primary text-[32px] uppercase tracking-[2px] max-w-[920px] lg:text-[68px] leading-tight mb-6">
               {title}
             </h1>
-            <button className="btn btn-lg btn-primary mx-auto">
+            <Button variant="primary" size="lg" className="!py-5 !px-7">
               {btnNext}
-            </button>
+            </Button>
           </div>
         </SwiperSlide>
       ))}

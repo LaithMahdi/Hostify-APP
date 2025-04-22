@@ -18,7 +18,7 @@ export default withUt({
     },
     extend: {
       colors: {
-        mainColor: "#1968e6",
+        mainColor: "#a37d4c",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
