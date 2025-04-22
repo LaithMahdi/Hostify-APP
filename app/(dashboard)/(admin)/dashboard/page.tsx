@@ -2,6 +2,12 @@
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import ReservationStats from "./ReservationStats";
+import RoomsPerGuestHouse from "./RoomsPerGuestHouse";
+import RegionDistributionChart from "./RegionDistributionChart";
+import ReservationTrendChart from "./ReservationTrendChart";
+import RoomStatsChart from "./RoomStatsChart";
+
 
 const chartData = [
   { month: "Jan", desktop: 186, mobile: 80 },
@@ -25,22 +31,23 @@ const chartConfig = {
 
 export default function DashboardPage() {
   return (
-    <div className="flex justify-center items-center">
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md w-[400px]">
-        <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">
-          Monthly Sales
-        </h2>
-        <ChartContainer config={chartConfig} className="min-h-[200px]">
-          <BarChart width={350} height={250} data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="desktop" fill="#2563eb" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="mobile" fill="#60a5fa" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ChartContainer>
-      </div>
+    <div className="container mx-auto py-8">
+    <h1 className="text-2xl font-bold mb-8">Tableau de bord</h1>
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* <ReservationStats /> */}
+          {/* <EquipmentDistributionChart /> */}
+      <RoomsPerGuestHouse />
     </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* <EquipmentDistributionChart /> */}
+     <RoomStatsChart/>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <RegionDistributionChart />
+        <ReservationTrendChart />
+      </div>
+  </div>
   );
 }
