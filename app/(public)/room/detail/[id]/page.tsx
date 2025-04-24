@@ -53,7 +53,7 @@ const page = () => {
               <span className="font-medium space-x-1">{room.roomNumber}</span>
             </h2>
 
-            <div className="flex items-center gap-x-2 mt-2 mb-4">
+            <div className="flex flex-wrap items-center gap-2 mt-2 mb-4">
               <div className="flex items-center gap-x-2 border-mainColor border-2 w-fit py-2 px-4 rounded-lg">
                 <Bed className="text-mainColor size-6" />
                 {room.type}
@@ -88,7 +88,7 @@ const page = () => {
                 nostrum sint et quod porro.
               </p>
 
-              <div className="grid grid-cols-3 gap-6 mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-6 mb-12">
                 {room.equipment.map((item, index) => (
                   <div
                     key={index}

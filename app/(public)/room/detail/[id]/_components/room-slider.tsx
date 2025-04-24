@@ -21,7 +21,7 @@ const RoomSlider = ({ images }: Props) => {
         disableOnInteraction: false,
         pauseOnMouseEnter: true,
       }}
-      className="h-[400px]"
+      className="h[200px] md:h-[400px]"
     >
       {images.map(({ id, url }) => (
         <SwiperSlide key={id}>
