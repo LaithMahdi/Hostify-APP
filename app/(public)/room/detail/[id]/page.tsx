@@ -4,8 +4,9 @@ import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import RoomSlider from "./_components/room-slider";
-import { MapPin, PawPrint, SquareParking, Star } from "lucide-react";
+import { Bed, MapPin, PawPrint, SquareParking, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const page = () => {
   const params = useParams();
@@ -43,6 +44,25 @@ const page = () => {
               Room Number:
               <span className="font-medium space-x-1">{room.roomNumber}</span>
             </h2>
+
+            <div className="flex items-center gap-x-2 mt-2 mb-4">
+              <div className="flex items-center gap-x-2 border-mainColor border-2 w-fit py-2 px-4 rounded-lg">
+                <Bed className="text-mainColor size-6" />
+                {room.type}
+              </div>
+              <div
+                className={cn(
+                  "text-base text-white font-semibold px-5 py-2 rounded-lg h-fit border-2",
+                  room.status === "AVAILABLE"
+                    ? "bg-green-500/10 text-green-500 border-green-500"
+                    : room.status === "BOOKED"
+                    ? "bg-red-500/10 text-red-500 border-red-500"
+                    : "bg-yellow-500/10 text-yellow-500 border-yellow-500"
+                )}
+              >
+                {room.status}
+              </div>
+            </div>
             <p className="mt-1 mb-6 text-gray-700">{room.description}</p>
 
             <RoomSlider images={room.images} />
