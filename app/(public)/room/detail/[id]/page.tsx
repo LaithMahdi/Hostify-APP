@@ -2,7 +2,7 @@
 import { Item } from "@/app/(public)/_components/rooms-section";
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import RoomSlider from "./_components/room-slider";
 import { Bed, MapPin, PawPrint, SquareParking, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 const page = () => {
   const params = useParams();
+  const router = useRouter();
   const id = params?.id as string;
 
   const { isFetching, data } = useQuery<DataType>({
@@ -131,7 +132,12 @@ const page = () => {
                 </p>
               </div>
 
-              <Button variant="primary" size="lg" className="w-full mt-4">
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full mt-4"
+                onClick={() => router.push(`/room/detail/${room.id}/booking`)}
+              >
                 book now for ${room.pricePerNight} / night
               </Button>
             </div>
