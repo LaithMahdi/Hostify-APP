@@ -64,12 +64,25 @@ export type Item = {
   capacity: number;
   hasBalcony: boolean;
   description?: string;
-
   images: Array<{
     id: number;
     url: string;
   }>;
-  equipment: string[];
+  equipment: Array<{
+    id: number;
+    name: string;
+    url: string;
+  }>;
+  guestHouse: {
+    id: number;
+    name: string;
+    address: string;
+    region: string;
+    description: string;
+    rating: number;
+    hasParking: boolean;
+    isPetFriendly: boolean;
+  };
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
