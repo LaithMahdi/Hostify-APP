@@ -4,7 +4,14 @@ import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import RoomSlider from "./_components/room-slider";
-import { Bed, MapPin, PawPrint, SquareParking, Star } from "lucide-react";
+import {
+  Bed,
+  MapPin,
+  PawPrint,
+  SquareParking,
+  Star,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -51,6 +58,10 @@ const page = () => {
                 <Bed className="text-mainColor size-6" />
                 {room.type}
               </div>
+              <div className="flex items-center gap-x-2 border-mainColor border-2 w-fit py-2 px-4 rounded-lg">
+                <Users className="text-mainColor size-6" />
+                {room.capacity} Guests
+              </div>
               <div
                 className={cn(
                   "text-base text-white font-semibold px-5 py-2 rounded-lg h-fit border-2",
@@ -96,7 +107,7 @@ const page = () => {
             </div>
           </div>
 
-          <div className="w-full lg:w-[40%] h-full">
+          <div className="w-full lg:w-[40%] h-full border p-4 rounded-lg bg-white">
             <div className="flex flex-col gap-y-3">
               <div className="flex gap-x-2 text-lg">
                 <h3 className="font-semibold">Guest House: </h3>
