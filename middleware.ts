@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verify } from "hono/jwt";
-import { COOKIE_KEY } from "./lib/keys";
+import { COOKIE_KEY, JWT_SECRET } from "./lib/keys"; // adjust if needed
 
-// Types for our JWT payload
+// Define your JWT payload
 interface JWTPayload {
   id: string;
+  name: string;
+  email: string;
   role: "OWNER" | "USER" | "ADMIN";
   exp?: number;
   iat?: number;
 }
 
-// Configuration for protected routes
+// Routes that require login
 const PROTECTED_ROUTES = [
   "/guest-house",
   "/guest",
@@ -19,26 +21,24 @@ const PROTECTED_ROUTES = [
   "/equipment",
   "/dashboard",
 ];
+
+// Admin-only routes
 const ADMIN_ROUTES = ["/management", "/admin"];
 
-// Function to verify JWT token
+// Verify the JWT token
 async function verifyToken(token: string): Promise<JWTPayload | null> {
   if (!token) {
     console.error("❌ No token provided.");
     return null;
   }
-
   if (!process.env.JWT_SECRET) {
-    console.error("❌ JWT_SECRET is missing from environment variables.");
+    console.error("❌ JWT_SECRET is missing.");
     return null;
   }
 
   try {
     console.log("🔍 Verifying token...");
-    const payload = (await verify(
-      token,
-      process.env.JWT_SECRET
-    )) as unknown as JWTPayload;
+    const payload = (await verify(token, JWT_SECRET)) as unknown as JWTPayload;
     console.log("✅ Token verified:", payload);
     return payload;
   } catch (error) {
@@ -47,16 +47,16 @@ async function verifyToken(token: string): Promise<JWTPayload | null> {
   }
 }
 
-// Function to check if token is expired
+// Check if token is expired
 function isTokenExpired(exp?: number): boolean {
-  return !exp || Date.now() >= exp * 1000; // Convert seconds to milliseconds
+  return !exp || Date.now() >= exp * 1000; // exp is in seconds, need ms
 }
 
 // Main middleware function
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware for public routes and API routes
+  // Skip middleware for public or static routes
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
@@ -67,21 +67,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get the token from the cookie using NextRequest
+  // Get token from cookie
   const token = request.cookies.get(COOKIE_KEY)?.value;
 
-  // If accessing a protected route
+  // For protected routes
   if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
-    // If no token exists, redirect to login
+    // No token? Redirect to login
     if (!token) {
       console.log("🔴 No token found, redirecting to login.");
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Verify the token
     const payload = await verifyToken(token);
 
-    // If token is invalid or expired, clear cookie and redirect to login
+    // Invalid or expired token? Clear cookie and redirect
     if (!payload || isTokenExpired(payload.exp)) {
       console.log("🔴 Invalid or expired token, redirecting to login.");
       const response = NextResponse.redirect(new URL("/login", request.url));
@@ -89,7 +88,7 @@ export async function middleware(request: NextRequest) {
       return response;
     }
 
-    // Check admin routes
+    // Admin route check
     if (
       ADMIN_ROUTES.some((route) => pathname.startsWith(route)) &&
       payload.role !== "ADMIN"
@@ -100,17 +99,19 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
-    // Add user info to headers for API routes
+    // ✅ Token is valid — attach user info to headers
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-user-id", payload.id);
+    requestHeaders.set("x-user-name", payload.name);
+    requestHeaders.set("x-user-email", payload.email);
     requestHeaders.set("x-user-role", payload.role);
 
     return NextResponse.next({
-      headers: requestHeaders,
+      request: { headers: requestHeaders },
     });
   }
 
-  // ✅ Prevent logged-in users from accessing /login and /sign-up
+  // If user is already logged in and tries to access login or sign-up
   if (token) {
     const payload = await verifyToken(token);
     if (payload && !isTokenExpired(payload.exp)) {
@@ -121,5 +122,19 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Public route — continue
   return NextResponse.next();
 }
+
+// Config
+export const config = {
+  matcher: [
+    /*
+      Match all routes except:
+      - static files (_next, static)
+      - api routes
+      - login & sign-up
+    */
+    "/((?!_next|static|api|login|sign-up).*)",
+  ],
+};

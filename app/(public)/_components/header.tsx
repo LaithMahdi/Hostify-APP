@@ -1,14 +1,19 @@
 "use client";
-
 import Logo from "@/components/svg/logo";
+import { Button } from "@/components/ui/button";
+import { useUserStore } from "@/lib/use-auth";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import AvatarDropdown from "./avatar-dropdown";
+import { getUserInfo } from "@/lib/get-user-info";
 
 const Header = () => {
   const pathname = usePathname();
-  const [header, setHeader] = useState(false);
+  const router = useRouter();
+  const [header, setHeader] = useState<boolean>(false);
+  const { isLoggedIn, setUser } = useUserStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,13 +29,25 @@ const Header = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [pathname]);
-  // "Home", "Guest Houses", "Rooms", "Contact"
+
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Guest Houses", href: "#guest-house" },
     { label: "Rooms", href: "#room" },
     { label: "Contact", href: "#contact" },
   ];
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      getUserInfo().then((user) => {
+        if (user) {
+          setUser(user);
+        }
+      });
+    }
+  }, [isLoggedIn]);
+
+  console.log("Header isLoggedIn:", isLoggedIn);
 
   return (
     <header
@@ -63,6 +80,14 @@ const Header = () => {
             </Link>
           ))}
         </nav>
+
+        {isLoggedIn == false ? (
+          <Button variant="primary" onClick={() => router.push("/login")}>
+            Login
+          </Button>
+        ) : (
+          <AvatarDropdown />
+        )}
       </div>
     </header>
   );
