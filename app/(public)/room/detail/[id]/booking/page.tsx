@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { DataType } from "../page";
 import apiClient from "@/lib/api-client";
 import { Item } from "@/app/(public)/_components/rooms-section";
+import BookingClientsSection from "./_components/booking-clients-section";
 
 const page = () => {
   const params = useParams();
@@ -26,7 +27,11 @@ const page = () => {
 
   const room: Item = data?.data as Item;
 
-  return <section className="container py-28"></section>;
+  return (
+    <section className="container py-28">
+      <BookingClientsSection />
+    </section>
+  );
 };
 
 export default page;
