@@ -13,7 +13,7 @@ const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [header, setHeader] = useState<boolean>(false);
-  const { isLoggedIn, setUser } = useUserStore();
+  const { isLoggedIn, setUser, email, name } = useUserStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,7 +86,7 @@ const Header = () => {
             Login
           </Button>
         ) : (
-          <AvatarDropdown />
+          <AvatarDropdown email={email} name={name} />
         )}
       </div>
     </header>
