@@ -1,19 +1,18 @@
 "use client";
 import Logo from "@/components/svg/logo";
 import { Button } from "@/components/ui/button";
-import { useUserStore } from "@/lib/use-auth";
+import { useUserStore } from "@/stores/user";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AvatarDropdown from "./avatar-dropdown";
-import { getUserInfo } from "@/lib/get-user-info";
 
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [header, setHeader] = useState<boolean>(false);
-  const { isLoggedIn, setUser, email, name } = useUserStore();
+  const { role, email, name } = useUserStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,17 +36,9 @@ const Header = () => {
     { label: "Contact", href: "#contact" },
   ];
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      getUserInfo().then((user) => {
-        if (user) {
-          setUser(user);
-        }
-      });
-    }
-  }, [isLoggedIn]);
+  const isAuthenticated = role !== "";
 
-  console.log("Header isLoggedIn:", isLoggedIn);
+  console.log("Header isLoggedIn:", isAuthenticated);
 
   return (
     <header
@@ -81,7 +72,7 @@ const Header = () => {
           ))}
         </nav>
 
-        {isLoggedIn == false ? (
+        {isAuthenticated == false ? (
           <Button variant="primary" onClick={() => router.push("/login")}>
             Login
           </Button>

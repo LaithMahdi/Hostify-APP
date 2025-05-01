@@ -18,6 +18,7 @@ const PROTECTED_ROUTES = [
   "/guest-house",
   "/guest",
   "/room",
+  "/room/detail",
   "/equipment",
   "/dashboard",
 ];

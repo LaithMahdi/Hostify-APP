@@ -20,6 +20,8 @@ import { signInSchema } from "../schema";
 import apiClient from "@/lib/api-client";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { useUserStore } from "@/stores/user";
+
 import { setCookie } from "@/lib/cookies";
 
 const SignInPage = () => {
@@ -45,11 +47,16 @@ const SignInPage = () => {
         variant: "success",
       });
 
-      setCookie("hostify-cookie-session", data.token, {
+      setCookie("hostify-cookie-session", data.data.token, {
         expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000),
         path: "/",
         secure: true,
         sameSite: "strict",
+      });
+      useUserStore.getState().setUser({
+        name: data.data.user.fullName,
+        email: data.data.user.email,
+        role: data.data.user.role,
       });
       router.push("/");
     },

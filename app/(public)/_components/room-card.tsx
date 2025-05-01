@@ -3,12 +3,14 @@ import { IoBedOutline } from "react-icons/io5";
 import { Item } from "./rooms-section";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface Props {
   room: Item;
 }
 
 const Room = ({ room }: Props) => {
+  const router = useRouter();
   return (
     <div className="bg-white shadow-2xl min-h-[530px] group">
       <div className="overflow-hidden">
@@ -67,6 +69,7 @@ const Room = ({ room }: Props) => {
           variant="primary"
           size="lg"
           className="!py-5 !px-7 max-w-[240px] duration-300"
+          onClick={() => router.push(`/room/detail/${room.id}`)}
         >
           Book now from ${room.pricePerNight}
         </Button>

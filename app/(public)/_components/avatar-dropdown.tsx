@@ -1,5 +1,4 @@
 import { CircleUserRoundIcon } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLogout } from "@/lib/logout";
 
 interface Props {
   name: string;
@@ -17,6 +17,8 @@ interface Props {
 }
 
 export default function AvatarDropdown({ email, name }: Props) {
+  const logout = useLogout();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +38,11 @@ export default function AvatarDropdown({ email, name }: Props) {
           <DropdownMenuItem>Option 3</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Button className="w-full" variant="primary" onClick={logout}>
+            Logout
+          </Button>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
