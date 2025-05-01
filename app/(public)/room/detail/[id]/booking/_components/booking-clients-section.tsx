@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
-import { BadgeInfo, Plus, Trash } from "lucide-react";
+import { BadgeInfo, Plus, Save, Trash } from "lucide-react";
 import { useState } from "react";
 import {
   formSchema,
@@ -55,6 +55,10 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [gender, setGender] = useState<Gender>(Gender.MALE);
   const [open, setOpen] = useState<boolean>(false);
+
+  const { toast } = useToast();
+
+  const user = data?.data[0];
   const [members, setMembers] = useState<
     {
       fullName: string;
@@ -62,11 +66,16 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
       gender: Gender;
       relationship: Relationship;
     }[]
-  >([]);
-
-  const { toast } = useToast();
-
-  const user = data?.data[0];
+  >(
+    user?.membre.map((e) => {
+      return {
+        fullName: e.fullName,
+        isManier: e.isManier,
+        gender: e.gender as Gender,
+        relationship: e.relationship as Relationship,
+      };
+    }) ?? []
+  );
   const updateGuest = useUpdateGuest(user?.id!);
 
   const getErrorMessage = (field: string) => {
@@ -85,7 +94,15 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
       age: user?.age == null ? "0" : user?.age.toString(),
       gender: Gender.MALE,
       relationship: Relationship.OTHER,
-      members: [],
+      members:
+        user?.membre.map((e) => {
+          return {
+            fullName: e.fullName,
+            isManier: e.isManier,
+            gender: e.gender as Gender,
+            relationship: e.relationship as Relationship,
+          };
+        }) ?? [],
     },
     mode: "onChange",
   });
@@ -94,27 +111,30 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
     return <div>Loading...</div>;
   }
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      updateGuest.mutate({
+      // Wait for the mutation to complete
+      const result = await updateGuest.mutateAsync({
         ...values,
         cin: values.cin.toString(),
-        numPassport: values.numPassport!.toString(),
+        numPassport: values.numPassport?.toString() ?? "", // Added nullish coalescing
         members,
       });
-      updateForm(
-        "members",
-        updateGuest.data?.data.membre.map((e: { id: number }) =>
-          e.id.toString()
-        )
-      );
+
+      // Now we can safely access the result data
+      if (result?.data?.data?.membre) {
+        updateForm(
+          "members",
+          result.data.data.membre.map((e: { id: number }) => e.id.toString())
+        );
+      }
+
       toast({
         title: "Succés",
         description: "Guest updated successfully",
         variant: "success",
       });
-      setLoading(false);
     } catch (error) {
       console.error(error);
       toast({
@@ -122,6 +142,7 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
         description: "An error occurred",
         variant: "error",
       });
+    } finally {
       setLoading(false);
     }
   }
@@ -133,10 +154,20 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
   return (
     <div className="flex flex-col bg-white w-full text-justify rounded-lg shadow-lg">
       <div className="flex items-center gap-2 bg-mainColor p-[18px] rounded-t-lg">
-        <BadgeInfo className="text-white size-7" />
-        <p className="text-white text-lg font-medium">
-          Booking Clients Information
-        </p>
+        <div className="flex justify-between w-full">
+          <div className="flex gap-2">
+            <BadgeInfo className="text-white size-7" />
+            <p className="text-white text-lg font-medium">
+              Booking Clients Information
+            </p>
+          </div>
+          <button
+            onClick={() => onSubmit(form.getValues())}
+            className=" rounded-full bg-mainColor/10 hover:bg-mainColor/20 transition-all duration-200 ease-in-out"
+          >
+            <Save className="text-white size-6" />
+          </button>
+        </div>
       </div>
       <div className="flex py-4 px-5 w-full">
         <Form {...form}>
@@ -303,14 +334,6 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
                   )}
                 />
               </div>
-              <Button
-                type="submit"
-                variant="primary"
-                loading={loading}
-                className="mt-3"
-              >
-                Submit
-              </Button>
             </div>
           </form>
         </Form>
