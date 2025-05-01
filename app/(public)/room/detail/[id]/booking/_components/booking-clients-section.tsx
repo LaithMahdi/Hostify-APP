@@ -58,10 +58,10 @@ const BookingClientsSection = () => {
     defaultValues: {
       cin: user?.cin.toString() ?? "0",
       numPassport: user?.numPassport.toString() ?? "0",
-      fullName: user?.fullName ?? "",
+      fullName: user?.fullName == null ? "" : user?.fullName,
       email: user?.email ?? "",
       phone: user?.phone ?? "",
-      age: user?.age.toString() ?? "0",
+      age: user?.age == null ? "0" : user?.age.toString(),
       gender: Gender.MALE,
       relationship: Relationship.OTHER,
       members: [],
