@@ -54,6 +54,7 @@ const SignUpPage = () => {
         description: "Congratulations! You have successfully signed up",
         variant: "success",
       });
+      router.push("/login");
     },
     onError: (error) => {
       toast({
