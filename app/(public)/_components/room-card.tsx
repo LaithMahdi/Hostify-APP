@@ -21,7 +21,7 @@ const Room = ({ room }: Props) => {
               : "https://port2flavors.com/wp-content/uploads/2022/07/placeholder-614.png"
           }
           alt="img"
-          className="group-hover:scale-110 transition-all duration-300 w-full"
+          className="group-hover:scale-110 transition-all duration-300 w-full h-[330px] object-cover object-center"
         />
       </div>
 
