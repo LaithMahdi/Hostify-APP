@@ -58,25 +58,7 @@ export default function Page() {
           searchName="clientName"
           placeholder="Search by client name ..."
         />
-        {/* <RegionFilter
-          filterName="country"
-          options={governorates.map((e) => {
-            return { value: e, label: e };
-          })}
-        />
-        <FilterButton
-          filterName="hasParking"
-          options={[
-            {
-              id: "true",
-              label: "Has Parking",
-            },
-            {
-              id: "false",
-              label: "No Parking",
-            },
-          ]}
-        /> */}
+
         <FilterButton
           filterName="isPetFriendly"
           options={[

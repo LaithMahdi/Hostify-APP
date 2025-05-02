@@ -6,6 +6,7 @@ import { Item } from "../page";
 import { formatDate } from "date-fns";
 import ActionsButtons from "./actions-buttons";
 import { DollarSign } from "lucide-react";
+import StatusButton from "./status-button";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -144,13 +145,7 @@ export const columns: ColumnDef<Item>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div>
-          {/* {row.original.hasParking ? (
-            <CheckCircle className="size-5 text-emerald-600" />
-          ) : (
-            <CircleAlertIcon className="size-5 text-rose-600" />
-          )} */}
-        </div>
+        <StatusButton id={row.original.id} statusValue={row.original.status} />
       );
     },
   },
