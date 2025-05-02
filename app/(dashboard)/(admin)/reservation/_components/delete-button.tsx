@@ -25,18 +25,18 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => {
-      return apiClient.delete(`/guest-house/delete/${data.id}`);
+      return apiClient.delete(`/reservation/delete/${data.id}`);
     },
     onSuccess: (data) => {
       if (data.data.success) {
         toast({
-          title: "Guest house deleted successfully",
+          title: "Reservation deleted successfully",
         });
-        queryClient.invalidateQueries({ queryKey: ["guest-houses"] });
+        queryClient.invalidateQueries({ queryKey: ["reservations"] });
         onOpenChange(false);
       } else {
         toast({
-          title: "Failed to delete guest house",
+          title: "Failed to delete reservation",
           variant: "success",
         });
         onOpenChange(false);
@@ -44,10 +44,10 @@ const DeleteButton = ({ data, open, onOpenChange }: Props) => {
     },
     onError: (error) => {
       toast({
-        title: "Failed to delete guest house",
+        title: "Failed to delete reservation",
         variant: "error",
       });
-      console.error("Failed", error);
+      console.log("Failed", error);
     },
   });
 

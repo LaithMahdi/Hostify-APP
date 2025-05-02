@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PencilIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { Item } from "../page";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,14 +15,14 @@ const ActionsButtons = ({ data }: Props) => {
 
   return (
     <div className="flex items-center gap-1">
-      <Button
+      {/* <Button
         variant="outline"
         size="sm"
         className="!p-2"
         onClick={() => router.push(`/guest-house/update/${data.id}`)}
       >
         <PencilIcon />
-      </Button>
+      </Button> */}
       <Button
         variant="outline"
         size="sm"

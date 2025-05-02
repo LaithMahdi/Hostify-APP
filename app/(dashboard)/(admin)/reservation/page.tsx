@@ -7,10 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import BreadCrumbList from "@/components/shared/bread-crumb-list";
 import Items from "./_components/items";
-import Search from "./_components/search";
-import { RegionFilter } from "./_components/region-filter";
-import { governorates } from "./_components/constants";
 import FilterButton from "@/components/shared/filter-button";
+import Search from "../guest/_components/search";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -22,22 +20,15 @@ export default function Page() {
     parseAsInteger.withDefault(1)
   );
 
-  const search = searchParams.get("search") || "";
-  const hasParking = searchParams.get("hasParking");
-  const isPetFriendly = searchParams.get("isPetFriendly");
-  const country = searchParams.get("country") || "";
+  const clientName = searchParams.get("clientName") || "";
+  const roomNumber = searchParams.get("roomNumber") || "";
 
   const { isFetching, data } = useQuery<DataType>({
-    queryKey: [
-      "reservations",
-      page,
-      search,
-      hasParking,
-      country,
-      isPetFriendly,
-    ],
-    // &search=${search}&country=${country}&hasParking=${hasParking}&isPetFriendly=${isPetFriendly}
-    queryFn: () => apiClient.get(`/reservation/all?page=${page}`),
+    queryKey: ["reservations", page, roomNumber, clientName],
+    queryFn: () =>
+      apiClient.get(
+        `/reservation/all?page=${page}&roomNumber=${roomNumber}&clientName=${clientName}`
+      ),
   });
 
   const totalItems = data?.data.totalItems ? data.data.totalItems : 0;
@@ -49,18 +40,25 @@ export default function Page() {
       <BreadCrumbList
         breadCrumbs={[
           { label: "Dashboard", href: "/" },
-          { label: "Guest House", href: "/guest-house" },
+          { label: "Reservation", href: "/reservation" },
         ]}
       />
       <h1 className="text-3xl font-semibold mb-3">
-        Guest Houses&nbsp;
+        Guest Reservation&nbsp;
         <span className="text-sm font-medium text-gray-500">
           ({totalItems})
         </span>
       </h1>
       <div className="flex items-center flex-col md:flex-row gap-2 w-full">
-        <Search />
-        <RegionFilter
+        <Search
+          searchName="roomNumber"
+          placeholder="Search by room number ..."
+        />
+        <Search
+          searchName="clientName"
+          placeholder="Search by client name ..."
+        />
+        {/* <RegionFilter
           filterName="country"
           options={governorates.map((e) => {
             return { value: e, label: e };
@@ -78,7 +76,7 @@ export default function Page() {
               label: "No Parking",
             },
           ]}
-        />
+        /> */}
         <FilterButton
           filterName="isPetFriendly"
           options={[
