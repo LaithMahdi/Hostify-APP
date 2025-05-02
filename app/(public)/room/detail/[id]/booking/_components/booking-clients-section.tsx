@@ -5,7 +5,7 @@ import { z } from "zod";
 import apiClient from "@/lib/api-client";
 import { useQuery } from "@tanstack/react-query";
 import { BadgeInfo, Plus, Save, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   formSchema,
   Gender,
@@ -90,7 +90,7 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
       numPassport: user?.numPassport.toString() ?? "0",
       fullName: user?.fullName == null ? "" : user?.fullName,
       email: user?.email ?? "",
-      phone: user?.phone ?? "",
+      phone: user?.phone == null ? "" : user?.phone,
       age: user?.age == null ? "0" : user?.age.toString(),
       gender: Gender.MALE,
       relationship: Relationship.OTHER,
@@ -106,6 +106,30 @@ const BookingClientsSection = ({ formData, updateForm, errors }: Props) => {
     },
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (user) {
+      form.setValue("fullName", user?.fullName == null ? "" : user?.fullName);
+      form.setValue("email", user.email);
+      form.setValue("phone", user?.phone == null ? "" : user?.phone);
+      form.setValue("age", user?.age == null ? "0" : user?.age.toString());
+      form.setValue("gender", user.gender as Gender);
+      form.setValue("relationship", user.relationship as Relationship);
+      form.setValue("cin", user.cin.toString());
+      form.setValue("numPassport", user.numPassport.toString() ?? "0");
+      setGender(user.gender as Gender);
+      setMembers(
+        user.membre.map((e) => {
+          return {
+            fullName: e.fullName,
+            isManier: e.isManier,
+            gender: e.gender as Gender,
+            relationship: e.relationship as Relationship,
+          };
+        }) ?? []
+      );
+    }
+  }, [user]);
 
   if (isFetching) {
     return <div>Loading...</div>;

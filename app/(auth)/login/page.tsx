@@ -58,7 +58,11 @@ const SignInPage = () => {
         email: data.data.user.email,
         role: data.data.user.role,
       });
-      router.push("/");
+      if (data.data.user.role !== "USER") {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
     },
     onError: (error) => {
       toast({
