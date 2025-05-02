@@ -1,5 +1,12 @@
 "use client";
-import { DoorClosed, Layout, School, Sofa, Users } from "lucide-react";
+import {
+  DoorClosed,
+  HandCoins,
+  Layout,
+  School,
+  Sofa,
+  Users,
+} from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 
 const routes = [
@@ -28,6 +35,11 @@ const routes = [
     icon: Users,
     label: "Guests",
     href: "/guest",
+  },
+  {
+    icon: HandCoins,
+    label: "Reservations",
+    href: "/reservation",
   },
 ];
 
